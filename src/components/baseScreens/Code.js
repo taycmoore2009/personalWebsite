@@ -5,6 +5,7 @@ import { PropTypes } from 'prop-types';
 import { Grid } from '@material-ui/core';
 
 import BinaryTree from '../coding/BinaryTree';
+import NewsFeed from '../coding/NewsFeed';
 
 const styles = () => ({
     /* temporary styling to remove later */
@@ -21,7 +22,7 @@ class Code extends React.Component {
             case 'tree':
                 return <BinaryTree/>;
             case 'news':
-                return <div>News Feed</div>
+                return <NewsFeed/>
             default:
                 return (
                     <div>
