@@ -5,7 +5,7 @@ export default function ContainedButtons(props) {
 
   return (
       <Button
-          variant="contained"
+          variant={props.variant || 'contained'}
           className={props.classes}
           onClick={props.onClick}
       >{props.label}</Button>
