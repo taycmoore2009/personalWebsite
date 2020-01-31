@@ -31,8 +31,8 @@ const styles = () => ({
   newsSelector: {
     padding: '20px 0',
   },
-  buttonContainers: {
-    padding: '0 10px'
+  buttonGroup: {
+    flexWrap: 'wrap'
   },
   button: {
     color: '#FFF',
@@ -181,7 +181,7 @@ class NewsFeed extends React.Component {
                 <Typography variant="h2">Select a News Feed</Typography>
               </Grid>
               <Grid item md={12}>
-                <ButtonGroup variant='text' aria-label='select news feed to read'>
+                <ButtonGroup variant='text' aria-label='select news feed to read' className={classes.buttonGroup}>
                 {['BBC', 'Fox', 'CNN', 'Huffington', 'New York'].map((outlet, i) => {
                   return (
                       <InputButton
