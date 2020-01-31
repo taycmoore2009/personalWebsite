@@ -20,7 +20,9 @@ const styles = theme => ({
   },
   /* end of temporary stretches */
   mainContainer: {
-    background: '#282c34',
+    backgroundImage: 'url(/imgs/glasses.png)',
+    backgroundColor: '#282c34',
+    backgroundPosition: 'center',
     color: '#FFF',
     width: '100%',
     height: '100%',
