@@ -14,11 +14,11 @@ import Pets from './components/baseScreens/Pets';
 import Finger from './components/baseScreens/Finger';
 
 const styles = theme => ({
-  /* temporary styling to remove later */
-  stretch: {
-    height: '10000px'
+  '@media (min-width: 600px)': {
+    mainContainer: {
+      paddingLeft: '106px'
+    }
   },
-  /* end of temporary stretches */
   mainContainer: {
     backgroundImage: 'url(/imgs/glasses.png)',
     backgroundColor: '#282c34',
@@ -28,8 +28,7 @@ const styles = theme => ({
     height: '100%',
     position: 'fixed',
     overflow: 'auto',
-    paddingTop: '64px',
-    paddingLeft: '106px'
+    paddingTop: '64px'
   }
 });
 
