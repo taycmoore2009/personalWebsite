@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
 import 'typeface-roboto';
@@ -48,6 +49,13 @@ class App extends React.Component {
     this.FingerRef = React.createRef();
   }
 
+  componentDidMount = () => {
+    const loc = window.location.pathname.split('/');
+    if(loc.length > 1 && loc[1] !== '') {
+      this.updateLocation(loc[1]);
+    }
+  }
+
   updateLocation = (step) => {
     const steps = step.split(':');
     const currentStep = steps[0];
@@ -65,25 +73,29 @@ class App extends React.Component {
   }
 
   getCurrentLocation = () => {
-    switch (this.state.currentLocation) {
-      case 'Home':
-        return <Home subStep={this.state.subStep}/>;
-      case 'Code':
-        return <Code subStep={this.state.subStep}/>;
-      case 'Pets':
-        return <Pets subStep={this.state.subStep}/>;
-      case 'Finger':
-        return <Finger subStep={this.state.subStep}/>
-      default:
-        return <Home subStep={this.state.subStep}/>;
-    }
+    return (
+        <Switch>
+          <Route path='/code'>
+            <Code subStep={this.state.subStep}/>
+          </Route>
+          <Route path='/pets'>
+            <Pets subStep={this.state.subStep}/>
+          </Route>
+          <Route path='/finger'>
+            <Finger subStep={this.state.subStep}/>
+          </Route>
+          <Route path='/'>
+            <Home subStep={this.state.subStep}/>
+          </Route>
+        </Switch>
+    );
   }
 
   render = () => {
     const { classes } = this.props;
     const CurrentPage = this.getCurrentLocation;
     return (
-      <React.Fragment>
+      <Router>
         <CssBaseline />
         <Navigation
           currentLocation={this.state.currentLocation}
@@ -92,7 +104,7 @@ class App extends React.Component {
         <Container className={classes.mainContainer} maxWidth='xl' ref={this.mainContainerRef}>
           <CurrentPage></CurrentPage>
         </Container>
-      </React.Fragment>
+      </Router>
     );
   }
 }

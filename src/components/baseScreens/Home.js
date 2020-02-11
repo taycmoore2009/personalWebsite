@@ -120,7 +120,6 @@ class HomePage extends React.Component {
 
     expandLink = refEl => (event, isExpanded) => {
         const { classes } = this.props;
-        debugger;
         for (var key in this.refEls) {
             this.refEls[key].current.classList.remove(classes.expanded);
             this.refEls[key].current.classList.add(classes.shrink);
