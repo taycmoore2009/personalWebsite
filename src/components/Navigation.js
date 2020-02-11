@@ -197,6 +197,13 @@ export default function MiniDrawer(props) {
                       </Link>
                     </ListItem>
                     <Divider variant="inset" component="li" />
+                    <ListItem button key='socialMediaWall'>
+                      <Link to="/code/socialwall" className={classes.link}>
+                          <ListItemIcon><Instagram/></ListItemIcon>
+                          <ListItemText primary='Social Wall' />
+                      </Link>
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
                   </List>
               </Collapse>
               <ListItem button key='Pets' onClick={handleClick('Pets')}>
