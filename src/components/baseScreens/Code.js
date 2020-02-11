@@ -6,6 +6,7 @@ import { Grid } from '@material-ui/core';
 
 import BinaryTree from '../coding/BinaryTree';
 import NewsFeed from '../coding/NewsFeed';
+import { BrowserRouter as Route, Switch } from 'react-router-dom';
 
 const styles = () => ({
     /* temporary styling to remove later */
@@ -18,18 +19,19 @@ const styles = () => ({
 class Code extends React.Component {
 
     showSubStep = () => {
-        switch (this.props.subStep) {
-            case 'tree':
-                return <BinaryTree/>;
-            case 'news':
-                return <NewsFeed/>
-            default:
-                return (
-                    <div>
-                        Select a code sample
-                    </div>
-                )
-        }
+        return (
+            <Switch>
+                <Route path='/code/tree'>
+                    <BinaryTree/>
+                </Route>
+                <Route path='/code/news'>
+                    <NewsFeed/>
+                </Route>
+                <Route path='/code'>
+                    Code
+                </Route>
+            </Switch>
+        );
     }
 
     render = () => {

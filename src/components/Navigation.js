@@ -18,7 +18,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { HomeOutlined, Code, Pets, Fingerprint, Nature, Ballot } from '@material-ui/icons';
+import { HomeOutlined, Code, Pets, Fingerprint, Nature, Ballot, Instagram } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -70,6 +71,9 @@ const useStyles = makeStyles(theme => ({
       width: theme.spacing(9) + 1,
     },
   },
+  header: {
+    textTransform: 'capitalize'
+  },
   toolbar: {
     display: 'flex',
     alignItems: 'center',
@@ -81,6 +85,13 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  link: {
+    display: 'flex',
+    color: '#000'
+  },
+  codeItem: {
+    justifyContent: 'space-between'
+  }
 }));
 
 export default function MiniDrawer(props) {
@@ -130,7 +141,7 @@ export default function MiniDrawer(props) {
             >
                 <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap>
+            <Typography variant="h6" noWrap className={classes.header}>
                 {currentLocation.split(':')[0]}
             </Typography>
             </Toolbar>
@@ -155,39 +166,51 @@ export default function MiniDrawer(props) {
             </div>
             <Divider />
             <List>
-              <ListItem button key='Home' onClick={handleClick('Home')}>
-                  <ListItemIcon><HomeOutlined/></ListItemIcon>
-                  <ListItemText primary='Home' />
+              <ListItem button key='Home'onClick={handleClick('Home')}>
+                <Link to='/' className={classes.link}>
+                      <ListItemIcon><HomeOutlined/></ListItemIcon>
+                      <ListItemText primary='Home' />
+                </Link>
               </ListItem>
               <Divider variant="inset" component="li" />
-              <ListItem button key='Code'>
-                  <ListItemIcon onClick={handleClick('Code')} ><Code/></ListItemIcon>
-                  <ListItemText onClick={handleClick('Code')} primary='Code' />
-                  {openCode ? <ExpandLess onClick={handleDropDown}/> : <ExpandMore onClick={handleDropDown} />}
+              <ListItem button key='Code' className={classes.codeItem}>
+                <Link to="/code" className={classes.link}>
+                    <ListItemIcon onClick={handleClick('Code')}><Code/></ListItemIcon>
+                    <ListItemText onClick={handleClick('Code')} primary='Code' />
+                </Link>
+                {openCode ? <ExpandLess onClick={handleDropDown}/> : <ExpandMore onClick={handleDropDown} />}
               </ListItem>
               <Divider variant="inset" component="li" />
               <Collapse in={openCode} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    <ListItem button key='tree' onClick={handleClick('Code:tree')}>
-                        <ListItemIcon><Nature/></ListItemIcon>
-                        <ListItemText primary='Build A Tree' />
+                    <ListItem button key='tree' onClick={handleClick('Code:Build A Tree')}>
+                      <Link to="/code/tree" className={classes.link}>
+                          <ListItemIcon><Nature/></ListItemIcon>
+                          <ListItemText primary='Build A Tree' />
+                      </Link>
                     </ListItem>
                     <Divider variant="inset" component="li" />
                     <ListItem button key='news' onClick={handleClick('Code:news')}>
-                        <ListItemIcon><Ballot/></ListItemIcon>
-                        <ListItemText primary='News Feed' />
+                      <Link to="/code/news" className={classes.link}>
+                          <ListItemIcon><Ballot/></ListItemIcon>
+                          <ListItemText primary='News Feed' />
+                      </Link>
                     </ListItem>
                     <Divider variant="inset" component="li" />
                   </List>
               </Collapse>
               <ListItem button key='Pets' onClick={handleClick('Pets')}>
-                  <ListItemIcon><Pets/></ListItemIcon>
-                  <ListItemText primary='Pets' />
+                <Link to="/pets" className={classes.link}>
+                      <ListItemIcon><Pets/></ListItemIcon>
+                      <ListItemText primary='Pets' />
+                </Link>
               </ListItem>
               <Divider variant="inset" component="li" />
               <ListItem button key='Fingerprint' onClick={handleClick('Finger')}>
-                  <ListItemIcon><Fingerprint/></ListItemIcon>
-                  <ListItemText primary='Biography' />
+                <Link to="/finger" className={classes.link}>
+                    <ListItemIcon><Fingerprint/></ListItemIcon>
+                    <ListItemText primary='Biography' />
+                </Link>
               </ListItem>
               <Divider variant="inset" component="li" />
             </List>
