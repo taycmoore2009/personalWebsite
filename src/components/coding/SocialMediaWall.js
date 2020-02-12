@@ -2,7 +2,7 @@ import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
 import { PropTypes } from 'prop-types';
-import { Grid, Card, CardHeader, CardContent, CardMedia, CardActionArea } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 const styles = () => ({
@@ -45,18 +45,7 @@ class SocialMediaWall extends React.Component {
 
         return (
             <Grid item xs={12} className={classes.wrapper}>
-                <Grid container>
-                    <Grid item xs={12} md={6}>
-                        <Cards/>
-                        <Cards/>
-                        <Cards/>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Cards/>
-                        <Cards/>
-                        <Cards/>
-                    </Grid>
-                </Grid>
+                Coming Soon!
             </Grid>
         )
     }

@@ -14,6 +14,8 @@ import Code from './components/baseScreens/Code';
 import Pets from './components/baseScreens/Pets';
 import Finger from './components/baseScreens/Finger';
 
+import DisplayScreen from './components/coding/socialMediaWall/DisplayScreen';
+
 const styles = theme => ({
   '@media (min-width: 600px)': {
     mainContainer: {
@@ -96,14 +98,21 @@ class App extends React.Component {
     const CurrentPage = this.getCurrentLocation;
     return (
       <Router>
-        <CssBaseline />
-        <Navigation
-          currentLocation={this.state.currentLocation}
-          updateLocation={this.updateLocation}
-        />
-        <Container className={classes.mainContainer} maxWidth='xl' ref={this.mainContainerRef}>
-          <CurrentPage></CurrentPage>
-        </Container>
+        <Switch>
+          <Route path='/mediaWall'>
+            <DisplayScreen/>
+          </Route>
+          <Route>
+            <CssBaseline />
+            <Navigation
+              currentLocation={this.state.currentLocation}
+              updateLocation={this.updateLocation}
+            />
+            <Container className={classes.mainContainer} maxWidth='xl' ref={this.mainContainerRef}>
+              <CurrentPage></CurrentPage>
+            </Container>
+          </Route>
+        </Switch>
       </Router>
     );
   }

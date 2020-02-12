@@ -1,0 +1,54 @@
+Admin Page: 
+Break down into three distinct layouts. After a layout is selected, choose what item goes in each section. Each item has their own configurable layout version. Allow for complete control over color scheme and transition timings.
+
+* Possible Items -
+* . Social Media Feeds
+* . . Facebook
+* . . Instagram
+* . . Twitter
+* . . Pinterest??? (look into this)
+* . Stock Images
+* . Video from Vinmeo (maybe include youtube)
+
+*  Layouts -
+* . Full Screen
+* . . One item at a time is on the screen, rotate between items with configurable transitions
+* . Split Screens
+* . . Choose 2 or 3 items to show at a time. Items do not need to be different types (an image surrounded by social media feeds)
+* . Combiniation
+* . . Switch between full screen and split screens.
+
+* Transitions - All transitions have adjustable timings
+* . Fade
+* . Scroll
+
+* Colors -
+* . Theme colors
+* . . User can choose a few colors (primary, secondary, etc...) and let system create view
+* . Direct control
+* . . Give user ability to choose every color that is not a media asset (images and videos) (.....maybe add filters if possible to images)
+
+--------------------------------------------------
+
+Display Page:
+* Possible Items -
+* . Social Media Feed
+* . Images
+* . Video Feed
+* Possible Configurations -
+* . Full Screen (Rotate between items)
+* . Split Screen (Multiple Items on screen)
+* . Combiniation (Between full screen and split screen)
+
+
+---------------------------------------------------
+
+Ideas: 
+To avoid creating users and storing credentials, I can create a password generator that you can supply to the display page to get your configuration.
+I should start simple, instead of working on Direct color control, start with theme colors control.
+
+Questions:
+Should I consider a mobile view? Ideally this should always be on a bigger screen, but I could force Full Screen view on small displays. Maybe this will be a user configuration.
+How much control over colors is to much?
+Is it color or colour?
+Is Pinterest possible intergration (Any apis?)
