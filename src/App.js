@@ -14,7 +14,7 @@ import Code from './components/baseScreens/Code';
 import Pets from './components/baseScreens/Pets';
 import Finger from './components/baseScreens/Finger';
 
-import DisplayScreen from './components/coding/socialMediaWall/DisplayScreen';
+import DisplayWall from './components/coding/socialMediaWall/DisplayScreen';
 
 const styles = theme => ({
   '@media (min-width: 600px)': {
@@ -100,7 +100,7 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route path='/mediaWall'>
-            <DisplayScreen/>
+            <DisplayWall/>
           </Route>
           <Route>
             <CssBaseline />

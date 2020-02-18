@@ -23,17 +23,6 @@ class SocialCard extends React.Component {
         this.state = {
             ...props
         }
-
-        this.startTimer();
-    }
-
-    startTimer = () => {
-        setTimeout(() => {
-            setInterval(() => {
-                const newData = this.props.getNewData();
-                this.setState(newData);
-            }, 20000);
-        }, this.props.timeout * 5000);
     }
 
     render = () => {
