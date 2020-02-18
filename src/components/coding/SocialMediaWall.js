@@ -41,7 +41,6 @@ class SocialMediaWall extends React.Component {
 
     render = () => {
         const { classes } = this.props;
-        const Cards = this.generateCard;
 
         return (
             <Grid item xs={12} className={classes.wrapper}>

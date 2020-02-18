@@ -2,9 +2,10 @@ import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
 import { PropTypes } from 'prop-types';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, Card, CardHeader, CardMedia, CardContent } from '@material-ui/core';
+import { Instagram } from '@material-ui/icons';
 
-import SocialCard from './SocialCard';
+// import SocialCard from './SocialCard';
 
 const JSONdata = [
     {
@@ -50,19 +51,62 @@ const configJson = {
             textAlign: 'center'
         },
     },
+    media: [
+        {
+            src: '<iframe title="vimeo-player" src="https://player.vimeo.com/video/357849250" width="640" height="360" frameborder="0" allowfullscreen></iframe>',
+            time: '93'
+        },
+        {
+            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/6CIKAzMBFC4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+            time: '43'
+        },
+        {
+            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/b4nwq-LaZYI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+            time: '71'
+        },
+        {
+            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/46k_vTfm2Fw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+            time: '53'
+        },
+        {
+            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/gPc9Tb_RSLw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+            time: '43'
+        }
+
+    ]
 }
 
 const styles = () => ({
-    bg: configJson.styles.background,
+    bg: {
+        width: '100vw',
+        height: '100vh',
+        ...configJson.styles.background
+    },
     wrapper: {
         padding: '20px 0'
     },
     header: configJson.styles.header,
-    card: configJson.card,
     prices: {
         maxWidth: 'calc(100% - 20px)',
         margin: '10px',
         maxHeight: 'calc(100% - 20px)'
+    },
+    slideShowContainer: {
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden'
+    },
+    innerSlideshow: {
+        position: 'absolute',
+        top: 0
+    },
+    transition: {
+        transition: '1s all'
+    },
+    card: {
+        maxWidth: '90%',
+        margin: '10px auto'
     },
     media: {
         height: 190
@@ -72,12 +116,168 @@ const styles = () => ({
     }
 });
 
-class Mockup extends React.Component {
+class MediaPlayer extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            media: props.media,
+            index: 0
+        }
+
+    }
+
+    startTimer = () => {
+
+        const {index, media} = this.state;
+        const currentMedia = media[index];
+
+        setTimeout(() => {
+            console.log('ended');
+            this.setState({index: index === this.state.media.length - 1 ? 0 : index + 1});
+        }, Number(currentMedia.time) * 1000);
+    }
+
+    render() {
+        const {classes} = this.props;
+        const {index, media} = this.state;
+        const currentMedia = media[index];
+        const src = currentMedia.src
+
+        if(src.includes('.jpg') || src.includes('.png') || src.includes('.gif') || src.includes('.jpeg')) {
+            return (
+                <img
+                    onLoad={this.startTimer}
+                    src={src}
+                    alt='special media'
+                />
+            );
+        }
+
+        const regexSrc = /<iframe.*?src=['"](.*?)['"]/;
+        const regexHeight = /<iframe.*?height=['"](.*?)['"]/;
+        const regexWidth = /<iframe.*?width=['"](.*?)['"]/;
+
+        // debugger;
+        
+        if(this.props.outerRef.current) {
+            const girdWidth = this.props.outerRef.current.offsetWidth;
+            const iframeHeight = Number(regexHeight.exec(src)[1] || 1);
+            const iframeWidth = Number(regexWidth.exec(src)[1] || 1);
+            const height = (iframeHeight / iframeWidth) * girdWidth;
+            return (
+                <iframe
+                    onLoad={this.startTimer}
+                    title='dogs' 
+                    className={classes.prices} 
+                    src={`${regexSrc.exec(src)[1] || ''}?autoplay=1`}
+                    width={`${girdWidth - 20}px`}
+                    height={`${height}px`} 
+                    allow="autoplay; fullscreen"
+                    frameBorder="0"
+                ></iframe>
+            );
+        }
+        return (
+            <div></div>
+        );
+    }
+}
+
+function SocialCard(props) {
+    const { classes, name, minutes, img, text } = props;
+
+    return (
+        <Card className={classes.card} style={{border: '1px solid #c49c5e'}} variant='elevation'>
+            <CardHeader
+                avatar={(<Instagram/>)}
+                title={`@${name}`}
+                subheader={`${minutes} minutes ago`}
+            />
+            <CardMedia image={`/instaPics/dog${img}.jpg`} className={classes.media}/>
+            <CardContent>
+                <Typography>{text}</Typography>
+            </CardContent>
+        </Card>
+    )
+}
+
+class SlideShow extends React.Component {
+    
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            slides: props.slide,
+            isScrolling: false
+        }
+
+        this.innerSlideshowRef = React.createRef();
+
+        setTimeout(() => {
+            this.startTimer();
+        }, this.props.startTimeout || 0);
+    }
+
+    startTimer = () => {
+        setInterval(() => {
+            const newSlide = this.props.getNextCard();
+            const slides = this.state.slides;
+            slides.push(newSlide);
+            this.setState({slides, isScrolling: true});
+        }, 5000);
+    }
+
+    componentDidUpdate = () => {
+        const { classes } = this.props;
+        setTimeout(() => {
+            if(this.state.isScrolling) {
+                this.innerSlideshowRef.current.firstChild.classList.add(classes.transition);
+                const height = this.innerSlideshowRef.current.firstChild.firstChild.offsetHeight + 10;
+                this.innerSlideshowRef.current.firstChild.style.top = '-'+ height +'px';
+
+                setTimeout(() => {
+                    this.innerSlideshowRef.current.firstChild.classList.remove(classes.transition);
+                    const slides = this.state.slides;
+                    slides.shift();
+                    this.innerSlideshowRef.current.firstChild.style.top = '0px';
+                    this.setState({slides, isScrolling: false});
+                }, 1000)
+            }
+        }, 0);
+    }
+
+    render = () => {
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.slideShowContainer} ref={this.innerSlideshowRef}>
+                <div className={classes.innerSlideshow}>
+                    {this.state.slides.map((slide, i) => {
+                        return <SocialCard
+                            key={i}
+                            classes={classes}
+                            name={slide.name}
+                            minutes={slide.minutes}
+                            img={slide.img}
+                            text={slide.text}
+                            styles={classes}
+                        />
+                    })}
+                </div>
+            </div>
+        )
+    }
+}
+
+class DisplayWall extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.counter = 0;
+
+        this.videoGridRef = React.createRef();
     }
 
     getNewData = () => {
@@ -111,10 +311,6 @@ class Mockup extends React.Component {
 
     render = () => {
         const { classes, refer } = this.props;
-        const Card1 = this.getCard;
-        const Card2 = this.getCard;
-        const Card3 = this.getCard;
-        const Card4 = this.getCard;
 
         return (
             <Grid container ref={refer} className={classes.bg}>
@@ -123,22 +319,32 @@ class Mockup extends React.Component {
                     <Typography variant='h1' className={classes.header}>Collar and Comb</Typography>
                 </Grid>
                 }
-                <Grid item md={6}>
-                    <iframe title='dogs' className={classes.prices} src="https://player.vimeo.com/video/189789787?title=0&byline=0&portrait=0&autoplay=1&loop=1&autopause=0" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                <Grid item container md={6} ref={this.videoGridRef} alignItems='center'>
+                    <MediaPlayer media={configJson.media} classes={classes} outerRef={this.videoGridRef}/>
                 </Grid>
                 <Grid item md={3}>
-                    <Card1/><Card2/>
+                    <SlideShow 
+                        slide={[this.getNewData(), this.getNewData(), this.getNewData()]}
+                        getNextCard={this.getNewData}
+                        classes={classes}
+                        startTimeout={2500}
+                    />
                 </Grid>
                 <Grid item md={3}>
-                    <Card3/><Card4/>
+                    <SlideShow 
+                        slide={[this.getNewData(), this.getNewData(), this.getNewData()]}
+                        getNextCard={this.getNewData}
+                        classes={classes}
+                        startTimeout={0}
+                    />
                 </Grid>
             </Grid>
         );
     }
 }
 
-Mockup.propTypes = {
+DisplayWall.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(Mockup);
+export default withStyles(styles)(DisplayWall);
