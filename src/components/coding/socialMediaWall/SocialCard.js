@@ -1,51 +1,89 @@
 import React from 'react';
 
-import { withStyles } from '@material-ui/styles';
-import { PropTypes } from 'prop-types';
 import { Card, CardHeader, CardContent, CardMedia, Typography } from '@material-ui/core';
 import { Instagram } from '@material-ui/icons';
+import Skeleton from '@material-ui/lab/Skeleton';
 
-const styles = () => ({
-    card: {
-        maxWidth: '90%',
-        margin: '10px auto'
-    },
-    media: {
-        height: 190
-    },
-});
-
-class SocialCard extends React.Component {
+export default class SocialCard extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            ...props
+            isLoaded: false,
+            height: 200,
+            width: 200
         }
     }
 
-    render = () => {
-        const { classes } = this.props;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.img !== prevProps.img) {
+            this.checkImgHeight();
+            this.setState({isLoaded: false});
+        }
+    }
 
+    checkImgHeight() {
+        const imgDom = new Image();
+        const imgURL = `/instaPics/dog${this.props.img}.jpg`;
+
+        imgDom.addEventListener('load', (event) => {
+            const {
+                naturalHeight,
+                naturalWidth
+            } = event.currentTarget
+            const ratio = naturalHeight/naturalWidth;
+
+            setTimeout(() => {
+                if(ratio >= 1) {
+                    this.setState({
+                        isLoaded: true,
+                        height: 300,
+                        width: 300/ratio
+                    });
+                } else {
+                    this.setState({
+                        isLoaded: true,
+                    });
+                }
+            }, 500);
+        });
+
+        imgDom.src = imgURL
+    }
+
+    render() {
+        const { classes, name, img, minutes, text } = this.props;
+        const imgURL = `/instaPics/dog${img}.jpg`;
+        
         return (
-            <Card className={classes.card} style={{border: '1px solid #c49c5e'}} variant='elevation'>
+            <Card 
+                className={classes.card} 
+                style={{
+                    border: '1px solid #c49c5e',
+                    opacity: this.state.isLoaded ? 1 : 0
+                }} 
+                variant='elevation'
+            >
                 <CardHeader
                     avatar={(<Instagram/>)}
-                    title={`@${this.state.name}`}
-                    subheader={`${this.state.minutes} minutes ago`}
+                    title={`@${name}`}
+                    subheader={`${minutes} minutes ago`}
                 />
-                <CardMedia image={`/instaPics/dog${this.state.img}.jpg`} className={classes.media}/>
+                {this.state.isLoaded ? (
+                    <CardMedia
+                        className={classes.mediaContainer}
+                        image={imgURL}
+                        title='instaDog'
+                        style={{height: this.state.height, width: this.state.width}}
+                    />
+                ) : (
+                    <Skeleton animation="wave" variant="rect" className={classes.mediaContainer} />
+                )}
                 <CardContent>
-                    <Typography>{this.state.text}</Typography>
+                    <Typography>{text}</Typography>
                 </CardContent>
             </Card>
         )
     }
 }
-
-SocialCard.propTypes = {
-    classes: PropTypes.object.isRequired
-}
-
-export default withStyles(styles)(SocialCard);

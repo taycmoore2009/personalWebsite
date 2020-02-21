@@ -1,0 +1,28 @@
+
+        // setInterval(() => {
+        //     const newSlide = this.props.getNextCard();
+        //     const slides = this.state.slides;
+        //     slides.push(newSlide);
+        //     this.setState({
+        //         slides,
+        //         isScrolling: true
+        //     });
+        //     const height = this.innerSlideshowRef.current.firstChild.firstChild.offsetHeight + 10;
+        //     setTimeout(() => {
+        //         this.setState({
+        //             scrollHeight: `-${height}`
+        //         })
+
+        //         setTimeout(() => {
+        //             this.setState({
+        //                 isScrolling: false,
+        //             });
+        //             setTimeout(() => {
+        //                 this.setState({
+        //                     slides: this.state.slides.slice(1),
+        //                     scrollHeight: '0'
+        //                 });
+        //             }, 1000)
+        //         }, 2000);
+        //     }, 1000);
+        // }, 5000);

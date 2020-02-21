@@ -2,10 +2,10 @@ import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
 import { PropTypes } from 'prop-types';
-import { Grid, Typography, Card, CardHeader, CardMedia, CardContent } from '@material-ui/core';
-import { Instagram } from '@material-ui/icons';
+import { Grid, Typography } from '@material-ui/core';
 
-// import SocialCard from './SocialCard';
+import MediaPlayer from './MediaPlayer';
+import SlideShow from './SlideShow';
 
 const JSONdata = [
     {
@@ -51,6 +51,7 @@ const configJson = {
             textAlign: 'center'
         },
     },
+    transitionTime: 5,
     media: [
         {
             src: '<iframe title="vimeo-player" src="https://player.vimeo.com/video/357849250" width="640" height="360" frameborder="0" allowfullscreen></iframe>',
@@ -86,7 +87,7 @@ const styles = () => ({
         padding: '20px 0'
     },
     header: configJson.styles.header,
-    prices: {
+    videoMedia: {
         maxWidth: 'calc(100% - 20px)',
         margin: '10px',
         maxHeight: 'calc(100% - 20px)'
@@ -105,170 +106,20 @@ const styles = () => ({
         transition: '1s all'
     },
     card: {
-        maxWidth: '90%',
-        margin: '10px auto'
+        maxWidth: 400,
+        margin: 10,
+        transition: '0.25s all'
+    },
+    mediaContainer: {
+        minHeight: 200,
+        maxHeight: 300,
+        margin: '0 auto'
     },
     media: {
-        height: 190
-    },
-    pricesMedia: {
-        height: '100%'
+        maxWidth: '100%',
+        maxHeight: '100%'
     }
 });
-
-class MediaPlayer extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            media: props.media,
-            index: 0
-        }
-
-    }
-
-    startTimer = () => {
-
-        const {index, media} = this.state;
-        const currentMedia = media[index];
-
-        setTimeout(() => {
-            console.log('ended');
-            this.setState({index: index === this.state.media.length - 1 ? 0 : index + 1});
-        }, Number(currentMedia.time) * 1000);
-    }
-
-    render() {
-        const {classes} = this.props;
-        const {index, media} = this.state;
-        const currentMedia = media[index];
-        const src = currentMedia.src
-
-        if(src.includes('.jpg') || src.includes('.png') || src.includes('.gif') || src.includes('.jpeg')) {
-            return (
-                <img
-                    onLoad={this.startTimer}
-                    src={src}
-                    alt='special media'
-                />
-            );
-        }
-
-        const regexSrc = /<iframe.*?src=['"](.*?)['"]/;
-        const regexHeight = /<iframe.*?height=['"](.*?)['"]/;
-        const regexWidth = /<iframe.*?width=['"](.*?)['"]/;
-
-        // debugger;
-        
-        if(this.props.outerRef.current) {
-            const girdWidth = this.props.outerRef.current.offsetWidth;
-            const iframeHeight = Number(regexHeight.exec(src)[1] || 1);
-            const iframeWidth = Number(regexWidth.exec(src)[1] || 1);
-            const height = (iframeHeight / iframeWidth) * girdWidth;
-            return (
-                <iframe
-                    onLoad={this.startTimer}
-                    title='dogs' 
-                    className={classes.prices} 
-                    src={`${regexSrc.exec(src)[1] || ''}?autoplay=1`}
-                    width={`${girdWidth - 20}px`}
-                    height={`${height}px`} 
-                    allow="autoplay; fullscreen"
-                    frameBorder="0"
-                ></iframe>
-            );
-        }
-        return (
-            <div></div>
-        );
-    }
-}
-
-function SocialCard(props) {
-    const { classes, name, minutes, img, text } = props;
-
-    return (
-        <Card className={classes.card} style={{border: '1px solid #c49c5e'}} variant='elevation'>
-            <CardHeader
-                avatar={(<Instagram/>)}
-                title={`@${name}`}
-                subheader={`${minutes} minutes ago`}
-            />
-            <CardMedia image={`/instaPics/dog${img}.jpg`} className={classes.media}/>
-            <CardContent>
-                <Typography>{text}</Typography>
-            </CardContent>
-        </Card>
-    )
-}
-
-class SlideShow extends React.Component {
-    
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            slides: props.slide,
-            isScrolling: false
-        }
-
-        this.innerSlideshowRef = React.createRef();
-
-        setTimeout(() => {
-            this.startTimer();
-        }, this.props.startTimeout || 0);
-    }
-
-    startTimer = () => {
-        setInterval(() => {
-            const newSlide = this.props.getNextCard();
-            const slides = this.state.slides;
-            slides.push(newSlide);
-            this.setState({slides, isScrolling: true});
-        }, 5000);
-    }
-
-    componentDidUpdate = () => {
-        const { classes } = this.props;
-        setTimeout(() => {
-            if(this.state.isScrolling) {
-                this.innerSlideshowRef.current.firstChild.classList.add(classes.transition);
-                const height = this.innerSlideshowRef.current.firstChild.firstChild.offsetHeight + 10;
-                this.innerSlideshowRef.current.firstChild.style.top = '-'+ height +'px';
-
-                setTimeout(() => {
-                    this.innerSlideshowRef.current.firstChild.classList.remove(classes.transition);
-                    const slides = this.state.slides;
-                    slides.shift();
-                    this.innerSlideshowRef.current.firstChild.style.top = '0px';
-                    this.setState({slides, isScrolling: false});
-                }, 1000)
-            }
-        }, 0);
-    }
-
-    render = () => {
-        const { classes } = this.props;
-
-        return (
-            <div className={classes.slideShowContainer} ref={this.innerSlideshowRef}>
-                <div className={classes.innerSlideshow}>
-                    {this.state.slides.map((slide, i) => {
-                        return <SocialCard
-                            key={i}
-                            classes={classes}
-                            name={slide.name}
-                            minutes={slide.minutes}
-                            img={slide.img}
-                            text={slide.text}
-                            styles={classes}
-                        />
-                    })}
-                </div>
-            </div>
-        )
-    }
-}
 
 class DisplayWall extends React.Component {
 
@@ -291,53 +142,46 @@ class DisplayWall extends React.Component {
         return params;
     }
 
-    getCard = () => {
-        const params = this.getNewData();
-        return this.generateCard(params);
-    }
-
-    generateCard = (params) => {
+    generateSlideshows = () => {
         const { classes } = this.props;
-        return <SocialCard 
-                name={params.name}
-                minutes={params.minutes}
-                getNewData={this.getNewData}
-                img={params.img}
-                text={params.text}
-                timeout={this.counter}
-                styles={classes}
-            />
+        const numOfSlideshows = Math.floor((window.innerWidth / 2) / 300);
+        const slideshowArray = [];
+
+        for(let i = 0; i < numOfSlideshows; i++) {
+            slideshowArray.push(
+                <Grid item xs={12} md={Math.floor((12/numOfSlideshows)/2)} key={i}>
+                    <SlideShow 
+                        getNextCard={this.getNewData}
+                        classes={classes}
+                        startTimeout={2500}
+                        transitionTime={configJson.transitionTime}
+                    />
+                </Grid>
+            )
+        }
+        return slideshowArray;
     }
 
     render = () => {
         const { classes, refer } = this.props;
 
+        const slideShowArray = this.generateSlideshows();
+
         return (
             <Grid container ref={refer} className={classes.bg}>
                 { configJson.headerText && configJson.headerText !== '' && 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                     <Typography variant='h1' className={classes.header}>Collar and Comb</Typography>
                 </Grid>
                 }
-                <Grid item container md={6} ref={this.videoGridRef} alignItems='center'>
+                <Grid item container md={6} ref={this.videoGridRef} alignItems='center' justify='center' >
                     <MediaPlayer media={configJson.media} classes={classes} outerRef={this.videoGridRef}/>
                 </Grid>
-                <Grid item md={3}>
-                    <SlideShow 
-                        slide={[this.getNewData(), this.getNewData(), this.getNewData()]}
-                        getNextCard={this.getNewData}
-                        classes={classes}
-                        startTimeout={2500}
-                    />
-                </Grid>
-                <Grid item md={3}>
-                    <SlideShow 
-                        slide={[this.getNewData(), this.getNewData(), this.getNewData()]}
-                        getNextCard={this.getNewData}
-                        classes={classes}
-                        startTimeout={0}
-                    />
-                </Grid>
+                {
+                    slideShowArray.map((Slideshow) => {
+                        return Slideshow;
+                    })
+                }
             </Grid>
         );
     }
