@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Grid } from '@material-ui/core';
 
-import SocialCard from './SocialCard';
+import SocialCard from './FadeSocialCard';
 
 export default class SlideShow extends React.Component {
     
