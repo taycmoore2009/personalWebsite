@@ -5,7 +5,8 @@ import { PropTypes } from 'prop-types';
 import { Grid, Typography } from '@material-ui/core';
 
 import MediaPlayer from './MediaPlayer';
-import SlideShow from './SlideShow';
+import FadeSlideShow from './FadeSlideShow';
+import ScrollSlideShow from './ScrollSlideShow'
 
 const JSONdata = [
     {
@@ -52,6 +53,7 @@ const configJson = {
         },
     },
     transitionTime: 5,
+    transitionType: 'scroll',
     media: [
         {
             src: '<iframe title="vimeo-player" src="https://player.vimeo.com/video/357849250" width="640" height="360" frameborder="0" allowfullscreen></iframe>',
@@ -150,12 +152,21 @@ class DisplayWall extends React.Component {
         for(let i = 0; i < numOfSlideshows; i++) {
             slideshowArray.push(
                 <Grid item xs={12} md={Math.floor((12/numOfSlideshows)/2)} key={i}>
-                    <SlideShow 
-                        getNextCard={this.getNewData}
-                        classes={classes}
-                        startTimeout={2500}
-                        transitionTime={configJson.transitionTime}
-                    />
+                    {configJson.transitionType === 'fade' ? (
+                        <FadeSlideShow 
+                            getNextCard={this.getNewData}
+                            classes={classes}
+                            startTimeout={2500}
+                            transitionTime={configJson.transitionTime}
+                        />
+                    ) : (
+                        <ScrollSlideShow 
+                            getNextCard={this.getNewData}
+                            classes={classes}
+                            startTimeout={2500}
+                            transitionTime={configJson.transitionTime}
+                        />
+                    )}
                 </Grid>
             )
         }

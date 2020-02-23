@@ -2,8 +2,7 @@ import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
 import { PropTypes } from 'prop-types';
-import { Grid, Card, CardHeader, CardContent } from '@material-ui/core';
-import Skeleton from '@material-ui/lab/Skeleton';
+import { Grid } from '@material-ui/core';
 
 const styles = () => ({
     wrapper: {
@@ -18,26 +17,28 @@ const styles = () => ({
     }
 });
 
+const configJson = {
+    styles: {
+        background: {
+            background: 'url("/instaPics/bgImage.jpg") no-repeat center',
+            backgroundSize: 'cover'
+        },
+        header: {
+            color: '#FFF',
+            textAlign: 'center'
+        },
+    },
+    headerTexta: 'a',
+    transitionTime: 5,
+    media: [
+        {
+            src: '<iframe title="vimeo-player" src="https://player.vimeo.com/video/357849250" width="640" height="360" frameborder="0" allowfullscreen></iframe>',
+            time: '93'
+        }
+    ]
+}
 
 class SocialMediaWall extends React.Component {
-
-    generateCard = () => {
-        const { classes } = this.props;
-        return (
-            <Card className={classes.card}>
-                <CardHeader
-                    avatar={(<Skeleton animation="wave" variant="circle"/>)}
-                    title={(<Skeleton animation="wave" height={12} width="80%"/>)}
-                    subheader={(<Skeleton animation="wave" height={10} width="40%"/>)}
-                />
-                <Skeleton animation="wave" variant="rect" className={classes.media}/>
-                <CardContent>
-                    <Skeleton animation="wave" height={10} style={{ marginBottom: 6 }} />
-                    <Skeleton animation="wave" height={10} width="80%" />
-                </CardContent>
-            </Card>
-        )
-    }
 
     render = () => {
         const { classes } = this.props;
