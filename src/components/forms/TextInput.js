@@ -49,6 +49,12 @@ export default function TextInput(props) {
             variant="outlined"
             helperText={props.helperText}
             inputRef={props.refer}
+            onChange={props.onChange}
+            onClick={props.onClick}
+            onBlur={props.onBlur}
+            color={props.color}
+            name={props.name}
+            value={props.value}
         />
     )
 }
