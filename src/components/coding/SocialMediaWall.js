@@ -8,6 +8,7 @@ import { SketchPicker } from 'react-color';
 import General from './socialMediaAdmin/General';
 import Styling from './socialMediaAdmin/Styling';
 import CustomMedia from './socialMediaAdmin/CustomMedia';
+import SocialMediaInfo from './socialMediaAdmin/SocialMediaInfo';
 
 const styles = () => ({
     wrapper: {
@@ -42,6 +43,21 @@ const styles = () => ({
     },
     mediaImg: {
         width: '100%'
+    },
+    tag: {
+        border: '1px solid #e639d8',
+        color: '#e639d8',
+        margin: 3,
+        backgroundColor: '#292c34'
+    },
+    tagClose: {
+        fontSize: 12,
+        position: 'absolute',
+        top: -4,
+        right: -4,
+        border: '1px solid',
+        borderRadius: 5,
+        backgroundColor: '#292c34'
     }
 });
 
@@ -54,7 +70,10 @@ class SocialMediaWall extends React.Component {
             transitionType: '',
             transitionTime: 5,
             layout: 'leftMedia',
+            spacing: '2',
             media: [],
+            instaTags: [],
+            instaAccount: '',
             headerText: '',
             currentColorChangeState: '',
             code: '',
@@ -81,6 +100,7 @@ class SocialMediaWall extends React.Component {
         this.newMediaTitleRefer = React.createRef();
         this.newMediaLinkRefer = React.createRef();
         this.newMediaLengthRefer = React.createRef();
+        this.newInstaTagsRefer = React.createRef();
     }
 
     handleInputChange = event => {
@@ -156,6 +176,18 @@ class SocialMediaWall extends React.Component {
         this.setState(media);
     }
 
+    addNewInstaTag = () => {
+        const instaTags = this.state.instaTags;
+        instaTags.push(this.newInstaTagsRefer.current.value);
+        this.newInstaTagsRefer.current.value = '';
+        this.setState(instaTags);
+    }
+
+    removeInstaTag = (index) => {
+        this.state.instaTags.splice(index, 1);
+        this.setState(this.state.instaTags);
+        // this.setState({instaTags: );
+    }
     render = () => {
         const { classes } = this.props;
         const { styles, currentColorChangeState } = this.state;
@@ -167,6 +199,18 @@ class SocialMediaWall extends React.Component {
                     <Grid item xs={12}><Typography variant='h3'>Social Media Wall Admin Page</Typography></Grid>
                     <Grid item xs={12}>
                         <General 
+                            state={this.state} 
+                            handleInputChange={this.handleInputChange}
+                            generateCode={this.generateCode}
+                            classes={classes}
+                        />
+                    </Grid>
+                    <Grid item xs={12}><Divider className={classes.divider}/></Grid>
+                    <Grid item xs={12}>
+                        <SocialMediaInfo
+                            addNewInstaTag={this.addNewInstaTag}
+                            newInstaTagsRefer={this.newInstaTagsRefer}
+                            removeInstaTag={this.removeInstaTag}
                             state={this.state} 
                             handleInputChange={this.handleInputChange}
                             generateCode={this.generateCode}
