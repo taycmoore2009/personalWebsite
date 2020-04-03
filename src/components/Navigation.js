@@ -198,7 +198,7 @@ export default function MiniDrawer(props) {
                     </ListItem>
                     <Divider variant="inset" component="li" />
                     <ListItem button key='socialMediaWall'>
-                      <Link to="/code/socialwall" className={classes.link}>
+                      <Link to="/code/socialwall" onClick={handleClick('Code:Social Wall')} className={classes.link}>
                           <ListItemIcon><Instagram/></ListItemIcon>
                           <ListItemText primary='Social Wall' />
                       </Link>
