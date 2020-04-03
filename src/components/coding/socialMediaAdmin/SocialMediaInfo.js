@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButton, Button, Icon } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
 import { Close, Instagram } from '@material-ui/icons';
 
 import TextInput from '../../forms/TextInput';

@@ -2,17 +2,32 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 import { withStyles } from '@material-ui/styles';
-import { Grid, Typography, Divider, Dialog, DialogTitle } from '@material-ui/core';
+import { Grid, Typography, Divider, Dialog, DialogTitle, CircularProgress } from '@material-ui/core';
 import { SketchPicker } from 'react-color';
 
 import General from './socialMediaAdmin/General';
 import Styling from './socialMediaAdmin/Styling';
 import CustomMedia from './socialMediaAdmin/CustomMedia';
 import SocialMediaInfo from './socialMediaAdmin/SocialMediaInfo';
+import ContainedButtons from '../forms/Button';
 
 const styles = () => ({
     wrapper: {
         padding: '20px 0'
+    },
+    loader: {
+        position: 'fixed',
+        width: '100%',
+        height: '100%',
+        background: 'rgba(55, 55, 55, .5)',
+        zIndex: 1,
+        top: 0,
+        left: 0
+    },
+    loadingCircle: {
+        position: 'absolute',
+        top: 'calc(50% - 20px)',
+        left: 'calc(50% - 20px)'
     },
     card: {
         maxWidth: 345,
@@ -58,6 +73,13 @@ const styles = () => ({
         border: '1px solid',
         borderRadius: 5,
         backgroundColor: '#292c34'
+    },
+    submitBtn: {
+        position: 'fixed',
+        bottom: 10,
+        right: 10,
+        width: 300,
+        maxWidth: '100%'
     }
 });
 
@@ -67,6 +89,7 @@ class SocialMediaWall extends React.Component {
         super(props);
 
         this.state = {
+            loading: false,
             transitionType: '',
             transitionTime: 5,
             layout: 'leftMedia',
@@ -136,6 +159,13 @@ class SocialMediaWall extends React.Component {
         this.setState({code: newCode});
     }
 
+    loadSettings = () => {
+        this.setState({loading: true});
+        setTimeout(() => {
+            this.setState({loading: false});
+        }, 2000)
+    }
+
     addNewMedia = () => {
         const media = this.state.media;
         media.push({
@@ -186,8 +216,12 @@ class SocialMediaWall extends React.Component {
     removeInstaTag = (index) => {
         this.state.instaTags.splice(index, 1);
         this.setState(this.state.instaTags);
-        // this.setState({instaTags: );
     }
+
+    generateWall = () => {
+
+    }
+
     render = () => {
         const { classes } = this.props;
         const { styles, currentColorChangeState } = this.state;
@@ -195,6 +229,7 @@ class SocialMediaWall extends React.Component {
 
         return (
             <Grid item xs={12} className={classes.wrapper}>
+                {this.state.loading && <div className={classes.loader}><CircularProgress className={classes.loadingCircle}/></div>}
                 <Grid container spacing={2}>
                     <Grid item xs={12}><Typography variant='h3'>Social Media Wall Admin Page</Typography></Grid>
                     <Grid item xs={12}>
@@ -202,6 +237,7 @@ class SocialMediaWall extends React.Component {
                             state={this.state} 
                             handleInputChange={this.handleInputChange}
                             generateCode={this.generateCode}
+                            loadSettings={this.loadSettings}
                             classes={classes}
                         />
                     </Grid>
@@ -248,6 +284,10 @@ class SocialMediaWall extends React.Component {
                         onChange={ this.handleChangeColor }
                     />}
                 </Dialog>
+                <ContainedButtons
+                    classes={classes.submitBtn}
+                    onClick={this.generateWall}
+                >Generate Wall!</ContainedButtons>
             </Grid>
         )
     }
