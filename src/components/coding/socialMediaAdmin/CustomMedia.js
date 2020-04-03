@@ -8,7 +8,7 @@ import ContainedButtons from '../../forms/Button';
 export default function CustomMedia(props) {
 
     return (
-        <Grid container spacing={2} justify='left'>
+        <Grid container spacing={2} justify='flex-start'>
             <Grid item xs={12}><Typography variant='h4'>Manage Custom Media</Typography></Grid>
             <Grid item xs={12}>
                 <TextInput
