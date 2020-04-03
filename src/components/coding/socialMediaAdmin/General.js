@@ -35,6 +35,13 @@ export default function General(props) {
                         >
                             Validate
                         </ContainedButtons>
+                        <ContainedButtons
+                            onClick={props.loadSettings}
+                            name='code'
+                            classes={props.classes.button}
+                        >
+                            Load
+                        </ContainedButtons>
                     </Grid>
                 </Grid>
             </Grid>
