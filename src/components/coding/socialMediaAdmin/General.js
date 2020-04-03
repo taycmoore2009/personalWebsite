@@ -91,6 +91,22 @@ export default function General(props) {
                             <option value='centerMedia'>Center Media Box</option>
                             <option value='rightMedia'>Right Side Media Box</option>
                         </SelectInput>
+                        <SelectInput
+                            value={props.state.spacing}
+                            onChange={props.handleInputChange}
+                            name='spacing'
+                            label='Grid Spacing'
+                            variant='outlined'
+                            color='secondary'
+                            labelId='spacing'
+                            labelText='Grid Spacing'
+                        >
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                        </SelectInput>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Paper style={{
@@ -112,16 +128,16 @@ export default function General(props) {
                             <Grid container alignItems='center' justify='space-around' style={{height: 300}}>
                                 {props.state.layout === 'mediaBox' ? (
                                     <Grid item xs={12} style={{height: '95%'}}>
-                                        <Paper variant='outlined' style={{height: '100%', width: '95%', margin: '0 auto'}}/>
+                                        <Paper variant='outlined' style={{height: '100%', width: `${100 - (3 * (props.state.spacing-1))}%`, margin: '0 auto'}}/>
                                     </Grid>
-                                ) : ['leftMedia', 'centerMedia', 'rightMedia'].map((media) => {
+                                ) : ['leftMedia', 'centerMedia', 'rightMedia'].map((media, index) => {
                                     return props.state.layout === media ? (
-                                            <Grid item xs={6} style={{height: '95%'}}>
-                                                <Paper variant='outlined' style={{height: '100%', width: '95%', margin: '0 auto'}}/>
+                                            <Grid key={index} item xs={6} style={{height: '95%'}}>
+                                                <Paper variant='outlined' style={{height: '100%', width: `${100 - (3 * (props.state.spacing-1))}%`, margin: '0 auto'}}/>
                                             </Grid>
                                         ) : (
-                                            <Grid item xs={3} style={{height: '100%'}}>
-                                                <Grid container direction='column' justify='space-around' style={{height: '100%', width: '95%', margin: '0 auto'}}>
+                                            <Grid key={index} item xs={3} style={{height: '100%'}}>
+                                                <Grid container direction='column' justify='space-around' style={{height: '100%', width: `${100 - (3 * (props.state.spacing-1))}%`, margin: '0 auto'}}>
                                                     <Paper variant='outlined' style={{
                                                         height: '28%',
                                                         backgroundColor: props.state.styles.card.bgColor,
@@ -144,7 +160,7 @@ export default function General(props) {
                                 }
                                 {props.state.layout === 'socialCards' && (
                                     <Grid item xs={3} style={{height: '100%'}}>
-                                        <Grid container direction='column' justify='space-around' style={{height: '100%', width: '95%', margin: '0 auto'}}>
+                                        <Grid container direction='column' justify='space-around' style={{height: '100%', width: `${100 - (3 * (props.state.spacing-1))}%`, margin: '0 auto'}}>
                                             <Paper variant='outlined'elevation={3}  style={{
                                                         height: '28%',
                                                         backgroundColor: props.state.styles.card.bgColor,

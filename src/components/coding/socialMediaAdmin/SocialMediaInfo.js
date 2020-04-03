@@ -34,6 +34,7 @@ export default function CustomMedia(props) {
                             size='small' 
                             className={props.classes.tag}
                             onClick={() => {props.removeInstaTag(index)}}
+                            key={index}
                         >
                             #{instaTag}
                             <Close className={props.classes.tagClose}/>
