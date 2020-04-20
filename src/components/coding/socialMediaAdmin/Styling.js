@@ -3,6 +3,7 @@ import { Grid, Typography} from '@material-ui/core';
 
 import TextInput from '../../forms/TextInput';
 import SelectInput from '../../forms/SelectInput';
+import ContainedButtons from '../../forms/Button';
 
 export default function General(props) {
     return (
@@ -19,15 +20,6 @@ export default function General(props) {
                 />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-                <TextInput
-                    label='Background Image URL'
-                    onChange={props.handleInputChangeStyle}
-                    color='secondary'
-                    name='background.img'
-                    value={props.state.styles.background.img}
-                />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
                 <SelectInput
                     value={props.state.styles.background.size}
                     onChange={props.handleInputChangeStyle}
@@ -41,6 +33,21 @@ export default function General(props) {
                     <option value='contain'>Contain</option>
                     <option value='cover'>Cover</option>
                 </SelectInput>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <ContainedButtons
+                        component='label'
+                        name='newMediaButton'
+                        classes={props.classes.button}
+                    >
+                    Upload Image
+                    <input 
+                        accept="image/x-png,image/gif,image/jpeg"
+                        onChange={props.backgroundImageUpload}
+                        type="file"
+                        style={{display: 'none'}}
+                    />
+                </ContainedButtons>
             </Grid>
             <Grid item xs={12}><Typography variant='h5'>Header Title</Typography></Grid>
             <Grid item xs={12} sm={6} md={4}>

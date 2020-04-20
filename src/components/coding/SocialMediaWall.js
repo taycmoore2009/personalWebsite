@@ -13,7 +13,7 @@ import ContainedButtons from '../forms/Button';
 
 const styles = () => ({
     wrapper: {
-        padding: '20px 0'
+        padding: '20px 0 80px'
     },
     loader: {
         position: 'fixed',
@@ -38,8 +38,13 @@ const styles = () => ({
     },
     button: {
         minWidth: 200,
-        display: 'inline',
-        margin: '10px 10px'
+        display: 'inline-block',
+        margin: '10px 10px',
+        textAlign: 'center'
+    },
+    fileButton: {
+        minWidth: 195,
+        width: 195,
     },
     divider: {
         backgroundColor: '#FFF'
@@ -89,6 +94,7 @@ class SocialMediaWall extends React.Component {
         super(props);
 
         this.state = {
+            selectedFile: null,
             loading: false,
             transitionType: '',
             transitionTime: 5,
@@ -123,6 +129,8 @@ class SocialMediaWall extends React.Component {
         this.newMediaTitleRefer = React.createRef();
         this.newMediaLinkRefer = React.createRef();
         this.newMediaLengthRefer = React.createRef();
+        this.newMediaImageTitleRefer = React.createRef();
+        this.newMediaImageLengthRefer = React.createRef();
         this.newInstaTagsRefer = React.createRef();
     }
 
@@ -166,17 +174,18 @@ class SocialMediaWall extends React.Component {
         }, 2000)
     }
 
-    addNewMedia = () => {
+    addNewMedia = (data) => {
         const media = this.state.media;
-        media.push({
+        const params = data ? data : {
             title: this.newMediaTitleRefer.current.value,
             link: this.newMediaLinkRefer.current.value,
             length: this.newMediaLengthRefer.current.value
-        });
+        };
+        media.push(params);
         this.newMediaTitleRefer.current.value = '';
         this.newMediaLinkRefer.current.value = '';
         this.newMediaLengthRefer.current.value = '';
-        this.setState(media);
+        this.setState({media, loading: false});
     }
 
     showMedia = event => {
@@ -219,9 +228,73 @@ class SocialMediaWall extends React.Component {
     }
 
     generateWall = () => {
-
+        this.setState({loading: true});
+        this.postWall(this.state)
+            .then((resp) => {
+                console.log(resp);
+                this.setState({loading: false});
+            })
+            .catch((err) => {
+                console.log(err);
+                this.setState({loading: false});
+            });
     }
 
+    singleFileChangedHandler = event => {
+        this.setState({
+            selectedFile: event.target.files
+        });
+    }
+
+    customMediaImageSet = (event) => {
+        this.setState({
+            selectedFile: event.target.files[0]
+        });
+    }
+    customMediaImageUpload = () => {
+        const file = this.state.selectedFile;
+        if ( file ) {
+            const fr = new FileReader();
+            fr.onload = () => {
+                this.addNewMedia({
+                    title: this.newMediaImageTitleRefer.current.value || this.state.media.length + 1,
+                    link: fr.result,
+                    length: this.newMediaImageLengthRefer.current.value || 30
+                });
+                this.setState({
+                    selectedFile: ''
+                });
+            }
+            fr.readAsDataURL(file);
+        } else {
+            console.log('error');
+        }
+    }
+    postWall = async (data) => {
+        debugger;
+        const promise = await fetch('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/socialData',
+            {
+                body: JSON.stringify(data),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        return await promise.json();
+    }
+    backgroundImageUpload = (event) => {
+        const file = event.target.files[0];
+        if ( file ) {
+            const fr = new FileReader();
+            fr.onload = () => {
+                this.handleInputChangeStyle({target: {name: 'background.img', value: fr.result}});
+            }
+            fr.readAsDataURL(file);
+        } else {
+            console.log('error');
+        }
+    }
     render = () => {
         const { classes } = this.props;
         const { styles, currentColorChangeState } = this.state;
@@ -258,7 +331,9 @@ class SocialMediaWall extends React.Component {
                         <Styling
                             handleCurrentColorChangeState={this.handleCurrentColorChangeState}
                             handleInputChangeStyle={this.handleInputChangeStyle}
+                            backgroundImageUpload={this.backgroundImageUpload}
                             state={this.state}
+                            classes={classes}
                         />
                     </Grid>
                     <Grid item xs={12}><Divider className={classes.divider}/></Grid>
@@ -268,6 +343,10 @@ class SocialMediaWall extends React.Component {
                             newMediaTitleRefer={this.newMediaTitleRefer}
                             newMediaLinkRefer={this.newMediaLinkRefer}
                             newMediaLengthRefer={this.newMediaLengthRefer}
+                            newMediaImageTitleRefer={this.newMediaImageTitleRefer}
+                            newMediaImageLengthRefer={this.newMediaImageLengthRefer}
+                            customMediaImageUpload={this.customMediaImageUpload}
+                            customMediaImageSet={this.customMediaImageSet}
                             showMedia={this.showMedia}
                             deleteMedia={this.deleteMedia}
                             moveMediaUp={this.moveMediaUp}
