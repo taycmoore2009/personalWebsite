@@ -20,6 +20,11 @@ const CssButton = withStyles({
       '& .MuiInput-underline:after': {
           borderBottomColor: '#FFF',
       },
+      '& .MuiButton-label': {
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap'
+      },
       '& .MuiOutlinedInput-root': {
           '& fieldset': {
               borderColor: '#FFF',
@@ -50,6 +55,7 @@ export default function ContainedButtons(props) {
           variant={props.variant || 'contained'}
           className={props.classes}
           onClick={props.onClick}
+          component={props.component}
       >{props.label}{props.children}</CssButton>
   );
 }

@@ -21,13 +21,13 @@ export default function General(props) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ContainedButtons
+                        {/* <ContainedButtons
                             onClick={props.generateCode}
                             name='code'
                             classes={props.classes.button}
                         >
                             Randomly Generate
-                        </ContainedButtons>
+                        </ContainedButtons> */}
                         <ContainedButtons
                             onChange={props.handleInputChange}
                             name='code'
