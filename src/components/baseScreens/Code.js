@@ -7,6 +7,7 @@ import { Grid } from '@material-ui/core';
 import BinaryTree from '../coding/BinaryTree';
 import NewsFeed from '../coding/NewsFeed';
 import SocialMediaWall from '../coding/SocialMediaWall'
+import VideoCapture from '../coding/VideoCapture'
 import { BrowserRouter as Route, Switch } from 'react-router-dom';
 
 const styles = () => ({
@@ -30,6 +31,9 @@ class Code extends React.Component {
                 </Route>
                 <Route path='/code/socialwall'>
                     <SocialMediaWall/>
+                </Route>
+                <Route path='/code/videocapture'>
+                    <VideoCapture/>
                 </Route>
                 <Route path='/code'>
                     Code
