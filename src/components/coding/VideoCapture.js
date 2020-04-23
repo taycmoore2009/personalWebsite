@@ -5,13 +5,25 @@ class VideoCapture extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            flip: false
+        };
+
         this.videoRef = React.createRef();
         this.canvasRef = React.createRef();
         this.imgRef = React.createRef();
     }
 
     componentDidMount = () => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        this.initiateCamera();
+    }
+
+    initiateCamera = () => {
+        navigator.mediaDevices.getUserMedia({
+            video: {facingMode: this.state.flip ? "user" : "environment"},
+            audio: false,
+        })
         .then((stream) => {
             this.videoRef.current.srcObject = stream;
             this.videoRef.current.play();
@@ -19,6 +31,11 @@ class VideoCapture extends React.Component {
         .catch(function(err) {
             console.log("An error occurred: " + err);
         });
+    }
+
+    flipCamera = () => {
+        this.setState({flip: !this.state.flip});
+        this.initiateCamera();
     }
 
     takePhoto = (event) => {
@@ -41,6 +58,7 @@ class VideoCapture extends React.Component {
             <div>
                 <div className="camera">
                     <video width='300px' ref={this.videoRef}>Video stream not available.</video>
+                    <button onClick={this.flipCamera}>Flip Camera</button>
                     <button onClick={this.takePhoto}>Take photo</button>
                 </div>
                 <canvas ref={this.canvasRef}>
