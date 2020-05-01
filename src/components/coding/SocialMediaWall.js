@@ -11,6 +11,7 @@ import Styling from './socialMediaAdmin/Styling';
 import CustomMedia from './socialMediaAdmin/CustomMedia';
 import SocialMediaInfo from './socialMediaAdmin/SocialMediaInfo';
 import ContainedButtons from '../forms/Button';
+import envConfig from '../../envConfig'
 
 const BUCKET_NAME = 'personalwebsitefiles';
 
@@ -96,6 +97,7 @@ class SocialMediaWall extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log(envConfig);
         this.state = {
             code: '',
             secretKey: '',
@@ -138,8 +140,8 @@ class SocialMediaWall extends React.Component {
         this.newInstaTagsRefer = React.createRef();
 
         // Enter copied or downloaded access ID and secret key here
-        const ID = 'AKIAXECQWZIMH3FYEG4L';
-        const SECRET = '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';
+        const ID = '';
+        const SECRET = envConfig.s3ID;
 
         console.log(this);
         this.s3 = new AWS.S3({
@@ -246,6 +248,19 @@ class SocialMediaWall extends React.Component {
         this.setState(this.state.instaTags);
     }
 
+    addInstaAccount = () => {
+        let newWin = window.open("https://www.instagram.com/oauth/authorize?client_id=166812134651391&redirect_uri=https://www.taythe.ninja/&scope=user_profile,user_media&response_type=code",);
+
+        this.setState({loading: true});
+        const timer = window.setInterval(() => {
+            if(newWin.closed) {
+                this.setState({loading: false});
+                console.log("closed!");
+                window.clearInterval(timer);
+            }
+            
+        }, 200);
+    }
     generateWall = () => {
         this.setState({loading: true});
         this.postWall(this.state)
@@ -359,6 +374,7 @@ class SocialMediaWall extends React.Component {
                             newInstaTagsRefer={this.newInstaTagsRefer}
                             removeInstaTag={this.removeInstaTag}
                             state={this.state} 
+                            addInstaAccount={this.addInstaAccount}
                             handleInputChange={this.handleInputChange}
                             classes={classes}
                         />
