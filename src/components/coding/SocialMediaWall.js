@@ -251,7 +251,7 @@ class SocialMediaWall extends React.Component {
     }
 
     addInstaAccount = () => {
-        let newWin = window.open(`https://www.instagram.com/oauth/authorize?client_id=166812134651391&redirect_uri=${window.location.href}/auth&scope=user_profile,user_media&response_type=code`,);
+        let newWin = window.open(`https://www.instagram.com/oauth/authorize?client_id=166812134651391&redirect_uri=${window.location.href}/auth?wallCode=${this.state.code}&scope=user_profile,user_media&response_type=code`,);
 
         this.setState({loading: true});
         const timer = window.setInterval(() => {
