@@ -13,7 +13,7 @@ export default function General(props) {
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <TextInput
-                            label='Display Screen Code'
+                            label='Display Screen Name'
                             onChange={props.handleInputChange}
                             color='secondary'
                             name='code'
@@ -21,19 +21,38 @@ export default function General(props) {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        {/* <ContainedButtons
-                            onClick={props.generateCode}
-                            name='code'
-                            classes={props.classes.button}
-                        >
-                            Randomly Generate
-                        </ContainedButtons> */}
                         <ContainedButtons
-                            onChange={props.handleInputChange}
+                            onClick={props.validate}
                             name='code'
                             classes={props.classes.button}
                         >
                             Validate
+                        </ContainedButtons>
+                        <ContainedButtons
+                            classes={props.classes.button}
+                            onClick={props.generateWall}
+                        >Save Wall</ContainedButtons>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                        <TextInput
+                            label='Display Screen Key'
+                            onChange={props.handleInputChange}
+                            color='secondary'
+                            name='secretKey'
+                            value={props.state.secretKey}
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <ContainedButtons
+                            onClick={props.generatekey}
+                            name='code'
+                            classes={props.classes.button}
+                        >
+                            Randomly Generate
                         </ContainedButtons>
                         <ContainedButtons
                             onClick={props.loadSettings}

@@ -31,7 +31,10 @@ const CssTextField = withStyles({
                 textAlign: 'left'
             },
             '& .MuiInputBase-input': {
-                color: '#FFF'
+                color: '#FFF',
+                '&:-internal-autofill-selected': {
+                    backgroundColor: 'transparent !important'
+                }
             }
         },
         '& .MuiFormHelperText-root': {
