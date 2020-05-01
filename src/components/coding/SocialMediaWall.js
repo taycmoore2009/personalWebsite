@@ -2,6 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 import { withStyles } from '@material-ui/styles';
+import AWS from 'aws-sdk';
 import { Grid, Typography, Divider, Dialog, DialogTitle, CircularProgress } from '@material-ui/core';
 import { SketchPicker } from 'react-color';
 
@@ -10,6 +11,9 @@ import Styling from './socialMediaAdmin/Styling';
 import CustomMedia from './socialMediaAdmin/CustomMedia';
 import SocialMediaInfo from './socialMediaAdmin/SocialMediaInfo';
 import ContainedButtons from '../forms/Button';
+import envConfig from '../../envConfig'
+
+const BUCKET_NAME = 'personalwebsitefiles';
 
 const styles = () => ({
     wrapper: {
@@ -93,7 +97,10 @@ class SocialMediaWall extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log(envConfig);
         this.state = {
+            code: '',
+            secretKey: '',
             selectedFile: null,
             loading: false,
             transitionType: '',
@@ -105,7 +112,6 @@ class SocialMediaWall extends React.Component {
             instaAccount: '',
             headerText: '',
             currentColorChangeState: '',
-            code: '',
             mediaDisplay: '',
             styles: {
                 background: {
@@ -132,6 +138,16 @@ class SocialMediaWall extends React.Component {
         this.newMediaImageTitleRefer = React.createRef();
         this.newMediaImageLengthRefer = React.createRef();
         this.newInstaTagsRefer = React.createRef();
+
+        // Enter copied or downloaded access ID and secret key here
+        const ID = '';
+        const SECRET = envConfig.s3ID;
+
+        console.log(this);
+        this.s3 = new AWS.S3({
+            accessKeyId: ID,
+            secretAccessKey: SECRET
+        });
     }
 
     handleInputChange = event => {
@@ -162,30 +178,35 @@ class SocialMediaWall extends React.Component {
         this.setState({currentColorChangeState: ''})
     }
 
-    generateCode = () => {
-        const newCode = Math.random().toString(36).substring(2, 4) + Math.random().toString(36).substring(2, 6);
-        this.setState({code: newCode});
+    generatekey = () => {
+        const newCode = Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 16);
+        this.setState({secretKey: newCode});
     }
 
     loadSettings = () => {
         this.setState({loading: true});
-        setTimeout(() => {
+        this.getWall({code: this.state.code, secretKey: this.state.secretKey})
+        .then((resp) => {
+            this.setState({loading: false, ...resp});
+        })
+        .catch((err) => {
+            console.log(err);
             this.setState({loading: false});
-        }, 2000)
+        });
     }
 
-    addNewMedia = (data) => {
+    addNewMedia = (event, data) => {
         const media = this.state.media;
-        const params = data ? data : {
+        const params = event ? {
             title: this.newMediaTitleRefer.current.value,
             link: this.newMediaLinkRefer.current.value,
             length: this.newMediaLengthRefer.current.value
-        };
+        } : data;
         media.push(params);
         this.newMediaTitleRefer.current.value = '';
         this.newMediaLinkRefer.current.value = '';
         this.newMediaLengthRefer.current.value = '';
-        this.setState({media, loading: false});
+        this.setState({loading: false});
     }
 
     showMedia = event => {
@@ -227,17 +248,33 @@ class SocialMediaWall extends React.Component {
         this.setState(this.state.instaTags);
     }
 
+    addInstaAccount = () => {
+        let newWin = window.open("https://www.instagram.com/oauth/authorize?client_id=166812134651391&redirect_uri=https://www.taythe.ninja/&scope=user_profile,user_media&response_type=code",);
+
+        this.setState({loading: true});
+        const timer = window.setInterval(() => {
+            if(newWin.closed) {
+                this.setState({loading: false});
+                console.log("closed!");
+                window.clearInterval(timer);
+            }
+            
+        }, 200);
+    }
     generateWall = () => {
         this.setState({loading: true});
         this.postWall(this.state)
             .then((resp) => {
-                console.log(resp);
                 this.setState({loading: false});
             })
             .catch((err) => {
                 console.log(err);
                 this.setState({loading: false});
             });
+    }
+
+    validate = () => {
+        
     }
 
     singleFileChangedHandler = event => {
@@ -253,25 +290,39 @@ class SocialMediaWall extends React.Component {
     }
     customMediaImageUpload = () => {
         const file = this.state.selectedFile;
-        if ( file ) {
-            const fr = new FileReader();
-            fr.onload = () => {
-                this.addNewMedia({
-                    title: this.newMediaImageTitleRefer.current.value || this.state.media.length + 1,
-                    link: fr.result,
-                    length: this.newMediaImageLengthRefer.current.value || 30
-                });
-                this.setState({
-                    selectedFile: ''
-                });
+        const name = this.newMediaImageTitleRefer.current.value;
+        const fileName = name + Date.now();
+        
+        // The name of the bucket that you have created
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: fileName, // File name you want to save as in S3
+            Body: file,
+            ACL: 'public-read'
+        };
+
+        this.setState({loading: true});
+        this.s3.upload(params, (err, data) => {
+            if (err) {
+                throw err;
             }
-            fr.readAsDataURL(file);
-        } else {
-            console.log('error');
-        }
+            this.addNewMedia(false, {
+                title: name || this.state.media.length + 1,
+                link: data.Location,
+                length: this.newMediaImageLengthRefer.current.value || 30
+            });
+            this.setState({
+                selectedFile: ''
+            });
+        });
+    }
+    getWall = async (data) => {
+        const url = new URL('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/socialData');
+        Object.keys(data).forEach(key => url.searchParams.append(key, data[key]))
+        const promise = await fetch(url);
+        return await promise.json();
     }
     postWall = async (data) => {
-        debugger;
         const promise = await fetch('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/socialData',
             {
                 body: JSON.stringify(data),
@@ -309,8 +360,10 @@ class SocialMediaWall extends React.Component {
                         <General 
                             state={this.state} 
                             handleInputChange={this.handleInputChange}
-                            generateCode={this.generateCode}
+                            generatekey={this.generatekey}
                             loadSettings={this.loadSettings}
+                            generateWall={this.generateWall}
+                            validate={this.validate}
                             classes={classes}
                         />
                     </Grid>
@@ -321,8 +374,8 @@ class SocialMediaWall extends React.Component {
                             newInstaTagsRefer={this.newInstaTagsRefer}
                             removeInstaTag={this.removeInstaTag}
                             state={this.state} 
+                            addInstaAccount={this.addInstaAccount}
                             handleInputChange={this.handleInputChange}
-                            generateCode={this.generateCode}
                             classes={classes}
                         />
                     </Grid>
@@ -366,7 +419,7 @@ class SocialMediaWall extends React.Component {
                 <ContainedButtons
                     classes={classes.submitBtn}
                     onClick={this.generateWall}
-                >Generate Wall!</ContainedButtons>
+                >Save Wall</ContainedButtons>
             </Grid>
         )
     }
