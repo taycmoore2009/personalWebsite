@@ -97,7 +97,6 @@ class SocialMediaWall extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log(envConfig);
         this.state = {
             code: '',
             secretKey: '',
@@ -140,8 +139,8 @@ class SocialMediaWall extends React.Component {
         this.newInstaTagsRefer = React.createRef();
 
         // Enter copied or downloaded access ID and secret key here
-        const ID = '';
-        const SECRET = envConfig.s3ID;
+        const ID = envConfig.s3ID;
+        const SECRET = envConfig.s3Secret;
 
         console.log(this);
         this.s3 = new AWS.S3({
