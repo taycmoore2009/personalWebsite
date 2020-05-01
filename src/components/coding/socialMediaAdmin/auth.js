@@ -15,7 +15,7 @@ export default function() {
         if(pairs[0] === 'code') {
             code = pairs[1];
         }
-        if(pairs[0] === 'wallCode') {
+        if(pairs[0] === 'state') {
             wallCode = pairs[1];
         }
     });
