@@ -42,13 +42,13 @@ export default function CustomMedia(props) {
                 })}
             </Grid>
             <Grid item xs={12}>
-                <TextInput
-                    label='Instagram account to follow'
-                    onChange={props.handleInputChange}
-                    color='secondary'
-                    name='instaAccount'
-                    value={props.state['instaAccount']}
-                />
+                <ContainedButtons
+                    onClick={props.addInstaAccount}
+                    classes={props.classes.button}
+                >
+                    Add your account!
+                </ContainedButtons>
+                <Typography variant="button" className={props.classes.instaAccount}>Connected Account: {props.state.instaAccount || 'No Account'}</Typography>
             </Grid>
         </Grid>
     );
