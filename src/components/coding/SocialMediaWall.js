@@ -256,11 +256,9 @@ class SocialMediaWall extends React.Component {
         this.setState({loading: true});
         const timer = window.setInterval(() => {
             if(newWin.closed) {
-                this.setState({loading: false});
-                console.log("closed!");
+                this.loadSettings();
                 window.clearInterval(timer);
             }
-            
         }, 200);
     }
     generateWall = () => {
