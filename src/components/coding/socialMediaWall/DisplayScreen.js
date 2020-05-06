@@ -125,12 +125,62 @@ const styles = () => ({
 
 class DisplayWall extends React.Component {
 
+    config = {
+        code: '',
+        selectedFile: null,
+        loading: false,
+        transitionType: '',
+        transitionTime: 5,
+        layout: 'leftMedia',
+        spacing: '2',
+        media: [],
+        instaTags: [],
+        instaAccount: '',
+        headerText: '',
+        currentColorChangeState: '',
+        mediaDisplay: '',
+        styles: {
+            background: {
+                color: '',
+                img: '',
+                size: ''
+            },
+            header: {
+                color: '',
+                textAlign: '',
+                size: ''
+            },
+            card: {
+                bgColor: '',
+                borColor: '',
+                color: ''
+            }
+        }
+    }
+
     constructor(props) {
         super(props);
 
         this.counter = 0;
 
         this.videoGridRef = React.createRef();
+    }
+
+    componentDidMount = () => {
+        const url = new URL('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/socialData');
+        window.location.search
+            .substring(1)
+            .split('&')
+            .map((param) => {
+                const splitParam = param.split('=');
+                if(splitParam.length === 2) {
+                    url.searchParams.append(splitParam[0], splitParam[1])
+                }
+                return null;
+            });
+        fetch(url)
+            .then(response => response.json())
+            .then(data => console.log(data));
     }
 
     getNewData = () => {
