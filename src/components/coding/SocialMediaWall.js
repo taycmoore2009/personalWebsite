@@ -50,6 +50,11 @@ const styles = () => ({
         minWidth: 195,
         width: 195,
     },
+    bgFileButton: {
+        width: '100%',
+        margin: '10px 0',
+        height: 56
+    },
     divider: {
         backgroundColor: '#FFF'
     },
@@ -115,6 +120,7 @@ class SocialMediaWall extends React.Component {
             headerText: '',
             currentColorChangeState: '',
             mediaDisplay: '',
+            backgroundImageName: '',
             styles: {
                 background: {
                     color: '',
@@ -336,12 +342,36 @@ class SocialMediaWall extends React.Component {
     }
     backgroundImageUpload = (event) => {
         const file = event.target.files[0];
+        const name = this.state.code || file.name;
+        const styles = this.state.styles;
         if ( file ) {
-            const fr = new FileReader();
-            fr.onload = () => {
-                this.handleInputChangeStyle({target: {name: 'background.img', value: fr.result}});
-            }
-            fr.readAsDataURL(file);
+            const fileName = name + Date.now();
+        
+            // The name of the bucket that you have created
+            const params = {
+                Bucket: BUCKET_NAME,
+                Key: fileName, // File name you want to save as in S3
+                Body: file,
+                ACL: 'public-read'
+            };
+
+            this.setState({loading: true});
+            this.s3.upload(params, (err, data) => {
+                if (err) {
+                    throw err;
+                }
+                this.setState({
+                    loading: false,
+                    styles: {
+                        background: {
+                            img: data.Location,
+                            ...styles.background
+                        },
+                        ...styles
+                    },
+                    backgroundImageName: name
+                });
+            });
         } else {
             console.log('error');
         }

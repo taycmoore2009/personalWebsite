@@ -11,7 +11,7 @@ export default function CustomMedia(props) {
         <Grid container spacing={2} justify='flex-start'>
             <Grid item xs={12}><Typography variant='h4'>Social Media Feeds</Typography></Grid>
             <Grid item xs={12}><Typography variant='h5'><Instagram/> Instagram</Typography></Grid>
-            <Grid item xs={12} sm={6} lg={5} xl={2}>
+            {/* <Grid item xs={12} sm={6} lg={5} xl={2}>
                 <TextInput
                     refer={props.newInstaTagsRefer}
                     label='Instagram Tags'
@@ -40,7 +40,7 @@ export default function CustomMedia(props) {
                             <Close className={props.classes.tagClose}/>
                         </Button>
                 })}
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
                 <ContainedButtons
                     onClick={props.addInstaAccount}

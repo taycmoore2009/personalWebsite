@@ -206,7 +206,6 @@ export default function General(props) {
                                     </Grid>
                                 )}
                             </Grid>
-
                         </Paper>
                     </Grid>
                 </Grid>
