@@ -25,7 +25,7 @@ export default class SocialCard extends React.Component {
 
     checkImgHeight() {
         const imgDom = new Image();
-        const imgURL = `/instaPics/dog${this.props.img}.jpg`;
+        const imgURL = `${this.props.img}`;
 
         imgDom.addEventListener('load', (event) => {
             const {
@@ -54,13 +54,15 @@ export default class SocialCard extends React.Component {
 
     render() {
         const { classes, name, img, minutes, text } = this.props;
-        const imgURL = `/instaPics/dog${img}.jpg`;
+        const imgURL = `${img}`;
         
         return (
             <Card 
                 className={classes.card} 
                 style={{
-                    border: '1px solid #c49c5e',
+                    border: `1px solid ${this.props.customStyles.borColor || '#c49c5e'}`,
+                    backgroundColor: this.props.customStyles.bgColor || '#000',
+                    color: this.props.customStyles.color || '#000',
                     opacity: this.state.isLoaded ? 1 : 0
                 }} 
                 variant='elevation'

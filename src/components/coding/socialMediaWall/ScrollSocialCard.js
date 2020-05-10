@@ -17,13 +17,15 @@ export default class SocialCard extends React.Component {
 
     render() {
         const { classes, name, img, minutes, text } = this.props;
-        const imgURL = `/instaPics/dog${img}.jpg`;
-        
+        const imgURL = `${img}`;
+
         return (
             <Card 
-                className={classes.card} 
+                className={classes.card}
                 style={{
-                    border: '1px solid #c49c5e'
+                    border: `1px solid ${this.props.customStyles.borColor || '#c49c5e'}`,
+                    backgroundColor: this.props.customStyles.bgColor || '#000',
+                    color: this.props.customStyles.color || '#000'
                 }} 
                 variant='elevation'
                 key={this.props.key}
@@ -33,7 +35,7 @@ export default class SocialCard extends React.Component {
                     title={`@${name}`}
                     subheader={`${minutes} minutes ago`}
                 />
-                <img src={imgURL} title='instaDog' alt='instaDog' className={classes.media}/>
+                <img src={imgURL} title='Instagram Card' alt='Instagram Card' className={classes.media}/>
                 <CardContent>
                     <Typography>{text}</Typography>
                 </CardContent>
