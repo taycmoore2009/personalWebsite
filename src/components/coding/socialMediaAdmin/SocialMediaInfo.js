@@ -1,8 +1,7 @@
 import React from 'react';
-import { Grid, Typography, Button } from '@material-ui/core';
-import { Close, Instagram } from '@material-ui/icons';
+import { Grid, Typography } from '@material-ui/core';
+import { Instagram } from '@material-ui/icons';
 
-import TextInput from '../../forms/TextInput';
 import ContainedButtons from '../../forms/Button';
 
 export default function CustomMedia(props) {
