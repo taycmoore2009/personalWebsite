@@ -11,7 +11,7 @@ export default function General(props) {
             <Grid item xs={12}><Typography variant='h4'>General Settings</Typography></Grid>
             <Grid item xs={12} sm={12} md={12}>
                 <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item sm={12} md={6}>
                         <TextInput
                             label='Display Screen Name'
                             onChange={props.handleInputChange}
@@ -20,13 +20,13 @@ export default function General(props) {
                             value={props.state.code}
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item sm={12} md={6}>
                         <ContainedButtons
                             onClick={props.validate}
                             name='code'
                             classes={props.classes.button}
                         >
-                            Validate
+                            Check Availability
                         </ContainedButtons>
                         <ContainedButtons
                             classes={props.classes.button}
@@ -37,7 +37,7 @@ export default function General(props) {
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
                 <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item sm={12} md={6}>
                         <TextInput
                             label='Display Screen Key'
                             onChange={props.handleInputChange}
@@ -46,7 +46,7 @@ export default function General(props) {
                             value={props.state.secretKey}
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item sm={12} md={6}>
                         <ContainedButtons
                             onClick={props.generatekey}
                             name='code'
