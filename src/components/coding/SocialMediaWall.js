@@ -230,7 +230,7 @@ class SocialMediaWall extends React.Component {
 
     moveMediaUp = event => {
         const media = this.state.media;
-        const currentIndex = Number(event.currentTarget.parentElement.parentElement.dataset.index);
+        const currentIndex = Number(event.currentTarget.parentElement.parentElement.parentElement.dataset.index);
         const movingMedia = media.splice(currentIndex, 1);
         media.splice(currentIndex-1, 0, movingMedia[0]);
         this.setState(media);
@@ -238,7 +238,7 @@ class SocialMediaWall extends React.Component {
 
     moveMediaDown = event => {
         const media = this.state.media;
-        const currentIndex = Number(event.currentTarget.parentElement.parentElement.dataset.index);
+        const currentIndex = Number(event.currentTarget.parentElement.parentElement.parentElement.dataset.index);
         const movingMedia = media.splice(currentIndex, 1);
         media.splice(currentIndex + 1, 0, movingMedia[0]);
         this.setState(media);
@@ -342,7 +342,7 @@ class SocialMediaWall extends React.Component {
     }
     backgroundImageUpload = (event) => {
         const file = event.target.files[0];
-        const name = this.state.code || file.name;
+        const name = file.name || this.state.code;
         const styles = this.state.styles;
         if ( file ) {
             const fileName = name + Date.now();
@@ -358,17 +358,13 @@ class SocialMediaWall extends React.Component {
             this.setState({loading: true});
             this.s3.upload(params, (err, data) => {
                 if (err) {
+                    this.setState({loading: false});
                     throw err;
                 }
+                styles.background.img = data.Location;
                 this.setState({
                     loading: false,
-                    styles: {
-                        background: {
-                            img: data.Location,
-                            ...styles.background
-                        },
-                        ...styles
-                    },
+                    styles,
                     backgroundImageName: name
                 });
             });
