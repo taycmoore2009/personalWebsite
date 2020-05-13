@@ -39,6 +39,7 @@ export default class MediaPlayer extends React.Component {
                         onLoad={this.startTimer}
                         src={src}
                         alt='special media'
+                        className={classes.videoMedia}
                     />
                 );
             }

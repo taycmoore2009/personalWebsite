@@ -211,7 +211,7 @@ class DisplayWall extends React.Component {
                 className={classes.bg}
                 style={{
                     backgroundColor: this.state.styles.background.color || "#FFF",
-                    backgroundImage: this.state.styles.background.img || "",
+                    backgroundImage: this.state.styles.background.img ? `url('${this.state.styles.background.img }')` : "",
                     backgroundSize: this.state.styles.background.size || "contain"
                 }}
                 direction='row'
@@ -240,7 +240,7 @@ class DisplayWall extends React.Component {
                     item 
                     container 
                     xs={12} 
-                    spacing={this.state.spacing}
+                    spacing={Number(this.state.spacing)}
                     style={{
                         height: hasHeaderText ? `calc(100% - ${headerStyle.fontSize} - 1rem)` : '100%'
                     }}
