@@ -49,6 +49,15 @@ export default function General(props) {
                     />
                 </ContainedButtons>
             </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <ContainedButtons
+                    onClick={props.removeBackgroundImg}
+                    name='newMediaButton'
+                    classes={`${props.classes.button} ${props.classes.fileButton} ${props.classes.bgFileButton}`}
+                >
+                    Remove Background Image
+                </ContainedButtons>
+            </Grid>
             <Grid item xs={12}><Typography variant='h5'>Header Title</Typography></Grid>
             <Grid item xs={12} sm={6} md={4}>
                 <TextInput

@@ -170,7 +170,11 @@ class SocialMediaWall extends React.Component {
     handleChangeColor = event => {
         const params = this.state.currentColorChangeState.split('.');
         const styles = this.state.styles;
-        styles[params[0]][params[1]] = event.hex;
+        let colorString = '';
+        for(let key in event.rgb) {
+            colorString += event.rgb[key] +', ';
+        }
+        styles[params[0]][params[1]] = `rgba(${colorString.substr(0, colorString.length - 2)})`;
         this.setState({styles})
     }
 
@@ -372,6 +376,12 @@ class SocialMediaWall extends React.Component {
             console.log('error');
         }
     }
+    removeBackgroundImg = () => {
+        const styles = this.state.styles;
+        styles.background.img = '';
+        this.setState({styles});
+    }
+    
     render = () => {
         const { classes } = this.props;
         const { styles, currentColorChangeState } = this.state;
@@ -411,6 +421,7 @@ class SocialMediaWall extends React.Component {
                             handleCurrentColorChangeState={this.handleCurrentColorChangeState}
                             handleInputChangeStyle={this.handleInputChangeStyle}
                             backgroundImageUpload={this.backgroundImageUpload}
+                            removeBackgroundImg={this.removeBackgroundImg}
                             state={this.state}
                             classes={classes}
                         />
