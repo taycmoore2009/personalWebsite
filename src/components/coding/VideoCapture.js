@@ -56,6 +56,12 @@ class VideoCapture extends React.Component {
     render = () => {
         return (
             <div>
+                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" multiple="" accept=".png,.jpeg,.jpg,.pdf"/>
+                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" accept=".png,.jpeg,.jpg,.pdf"></input>
+                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" multiple=""></input>
+                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput"></input>
+                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" multiple="" accept=".png,.jpeg,.jpg,.pdf"/>
+                <input type="file" accept="image/*" capture></input>
                 <div className="camera">
                     <video width='300px' ref={this.videoRef}>Video stream not available.</video>
                     <button onClick={this.flipCamera}>Flip Camera</button>
