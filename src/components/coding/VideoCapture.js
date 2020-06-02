@@ -54,15 +54,15 @@ class VideoCapture extends React.Component {
     }
 
     render = () => {
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const cameraSupported = document.createElement('input').capture !== undefined;
+        const navigatorUserAgent = navigator.userAgent;
         let capture = 'false';
 
         const isiOS = /iP(ad|hone|od)/i.test(navigatorUserAgent);
         const isChrome = /Chrome/i.test(navigatorUserAgent);
         const isMobileSafari = /Safari/i.test(navigatorUserAgent) && /AppleWebKit/i.test(navigatorUserAgent);
       
-        alert(`is this safari on iPad?? Answer: ${!isiOS && !isChrome && isMobileSafari ? 'yes' : 'no'}`)
+        alert(`is this safari on iPad?? Answer: ${!isiOS && !isChrome && isMobileSafari ? 'yes' : 'no'}`);
+
         return (
             <div>
                 
