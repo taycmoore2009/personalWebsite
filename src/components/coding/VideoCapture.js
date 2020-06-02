@@ -16,7 +16,7 @@ class VideoCapture extends React.Component {
     }
 
     componentDidMount = () => {
-        this.initiateCamera();
+        // this.initiateCamera();
     }
 
     initiateCamera = () => {
@@ -54,14 +54,25 @@ class VideoCapture extends React.Component {
     }
 
     render = () => {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const cameraSupported = document.createElement('input').capture !== undefined;
+        let capture = 'false';
+
+        if(!isMobile) {
+            alert(`not mobile, detected client ${navigator.userAgent}`);
+        }
+        if(!cameraSupported) {
+            alert(`camera not supported!`);
+        }
+
+        if(isMobile && cameraSupported) {
+            alert('camera supported');
+            capture = 'true'
+        }
         return (
             <div>
-                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" multiple accept="image/*"/>
-                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" accept="image/*"></input>
-                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" multiple></input>
-                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput"></input>
-                <input id="fileuploadGallery" capture type="file" name="file" data-ui="galleryFileInput FileInputBehavior-uploadInput" multiple accept="image/*"/>
-                <input type="file" accept="image/*" capture></input>
+                
+                <input type="file" accept="image/*" capture={capture}></input>
                 <div className="camera">
                     <video width='300px' ref={this.videoRef}>Video stream not available.</video>
                     <button onClick={this.flipCamera}>Flip Camera</button>
