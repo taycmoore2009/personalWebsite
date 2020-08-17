@@ -12,7 +12,8 @@ export default class SlideShow extends React.Component {
         const slides = []
 
         for(var i = 0; i < numOfSlides; i++){
-            slides.push(this.props.getNextCard());
+            const nextCard = this.props.getNextCard();
+            if (nextCard) slides.push(this.props.getNextCard());
         }
 
         this.state = {
@@ -22,22 +23,23 @@ export default class SlideShow extends React.Component {
 
         setTimeout(() => {
             this.startTimer();
-        }, this.props.startTimeout || 0);
+        }, this.props.slideDelay || 0);
 
         this.innerSlideshowRef = React.createRef();
         window.test = this.innerSlideshowRef;
     }
 
     startTimer = () => {
+        const transitionTime = this.props.transitionTime;
         setInterval(() => {
             const newSlide = this.props.getNextCard();
             const slides = this.state.slides;
-            slides.push(newSlide);
+            if (newSlide) slides.push(newSlide);
             this.setState({
                 slides,
                 isScrolling: true
             });
-            const height = this.innerSlideshowRef.current.firstChild.offsetHeight + 10;
+            const height = this.innerSlideshowRef.current.firstChild ? this.innerSlideshowRef.current.firstChild.offsetHeight + 12 : 0;
 
             setTimeout(() => {
                 this.setState({
@@ -53,10 +55,10 @@ export default class SlideShow extends React.Component {
                             slides: this.state.slides.slice(1),
                             scrollHeight: '0'
                         });
-                    }, 1000)
-                }, 2000);
-            }, 1000);
-        }, 5000);
+                    }, transitionTime/5)
+                }, transitionTime/3);
+            }, transitionTime/5);
+        }, transitionTime);
     }
 
     render() {
@@ -78,15 +80,17 @@ export default class SlideShow extends React.Component {
                     style={{top: `${this.state.scrollHeight}px`}}
                 >
                     {this.state.slides.map((slide, i) => {
-                        return <SocialCard
-                            key={i}
-                            classes={classes}
-                            name={slide.name}
-                            minutes={slide.minutes}
-                            img={slide.img}
-                            text={slide.text}
-                            styles={classes}
-                        />
+                        return <div key={i}>
+                            <SocialCard
+                                classes={classes}
+                                name={slide.username}
+                                minutes={slide.timestamp}
+                                img={slide.thumbnail_url || slide.media_url}
+                                text={slide.caption}
+                                styles={classes}
+                                customStyles={this.props.cardStyles}
+                            />
+                        </div>
                     })}
                 </Grid>
             </Grid>

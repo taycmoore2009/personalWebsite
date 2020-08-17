@@ -1,11 +1,13 @@
 import React from 'react';
 
-async function addCode(url) {
+async function addCode(url, data) { 
+    Object.keys(data).forEach(key => url.searchParams.append(key, data[key]))
     const request = await fetch(url);
     return await request.json();
 }
 export default function() {
-    const search = window.location.search.split("?")[1]
+    const location = window.location;
+    const search = location.search.split("?")[1]
     const params = search ? search.split('&') : [];
     let code = '';
     let wallCode = '';
@@ -20,8 +22,13 @@ export default function() {
         }
     });
     if(code) {
-        const url = `https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/instaAuth?code=${code}&wallCode=${wallCode}`;
-        addCode(url)
+        const url = new URL('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/instaAuth');
+        const data = {
+            code,
+            wallCode,
+            returnURL: location.origin + location.pathname
+        };
+        addCode(url, data)
             .then((resp) => {
                 console.log(resp);
             })

@@ -8,90 +8,17 @@ import MediaPlayer from './MediaPlayer';
 import FadeSlideShow from './FadeSlideShow';
 import ScrollSlideShow from './ScrollSlideShow'
 
-const JSONdata = [
-    {
-        name: 'taythemighty',
-        minutes: '2',
-        img: '6',
-        text: 'I just picked these two beauties up after their bath #styling #collarandcomb'
-    }, {
-        name: 'dogLover22',
-        minutes: '5',
-        img: '2',
-        text: 'That ass though #cutie #corgiebutt'
-    }, {
-        name: 'testuseraccount3',
-        minutes: '6',
-        img: '3',
-        text: '#glowup #beforeandafter #weightloss #shave #dog'
-    }, {
-        name: 'collarandcomb',
-        minutes: '9',
-        img: '4',
-        text: '#noms'
-    }, {
-        name: 'prettysteph',
-        minutes: '15',
-        img: '5',
-        text: 'Only the bestes bois get the bestes #treats #colloarandcomb'
-    }, {
-        name: 'testuseraccount3',
-        minutes: '16',
-        img: '1',
-        text: '#lazy #sundays #pitties #pitbulls #sweetie #dogs'
-    }];
-
-const configJson = {
-    styles: {
-        background: {
-            background: 'url("/instaPics/bgImage.jpg") no-repeat center',
-            backgroundSize: 'cover'
-        },
-        header: {
-            color: '#FFF',
-            textAlign: 'center'
-        },
-    },
-    transitionTime: 5,
-    transitionType: 'scroll',
-    media: [
-        {
-            src: '<iframe title="vimeo-player" src="https://player.vimeo.com/video/357849250" width="640" height="360" frameborder="0" allowfullscreen></iframe>',
-            time: '93'
-        },
-        {
-            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/6CIKAzMBFC4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-            time: '43'
-        },
-        {
-            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/b4nwq-LaZYI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-            time: '71'
-        },
-        {
-            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/46k_vTfm2Fw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-            time: '53'
-        },
-        {
-            src: '<iframe width="560" height="315" src="https://www.youtube.com/embed/gPc9Tb_RSLw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-            time: '43'
-        }
-
-    ]
-}
-
 const styles = () => ({
     bg: {
         width: '100vw',
         height: '100vh',
-        ...configJson.styles.background
     },
     wrapper: {
         padding: '20px 0'
     },
-    header: configJson.styles.header,
     videoMedia: {
         maxWidth: 'calc(100% - 20px)',
-        margin: '10px',
+        margin: '10px 0',
         maxHeight: 'calc(100% - 20px)'
     },
     slideShowContainer: {
@@ -109,7 +36,7 @@ const styles = () => ({
     },
     card: {
         maxWidth: 400,
-        margin: 10,
+        margin: '10px 0',
         transition: '0.25s all'
     },
     mediaContainer: {
@@ -125,17 +52,108 @@ const styles = () => ({
 
 class DisplayWall extends React.Component {
 
+    config = {
+    }
+
     constructor(props) {
         super(props);
 
+        this.state = {
+            media: [],
+            slideshowMedia: [],
+            isLoading: false,
+            code: '',
+            selectedFile: null,
+            loading: false,
+            transitionType: '',
+            transitionTime: 5000,
+            layout: 'leftMedia',
+            spacing: '2',
+            instaTags: [],
+            instaAccount: '',
+            headerText: '',
+            currentColorChangeState: '',
+            mediaDisplay: '',
+            styles: {
+                background: {
+                    color: '',
+                    img: '',
+                    size: ''
+                },
+                header: {
+                    color: '',
+                    textAlign: '',
+                    size: ''
+                },
+                card: {
+                    bgColor: '',
+                    borColor: '',
+                    color: ''
+                }
+            }
+        }
         this.counter = 0;
 
         this.videoGridRef = React.createRef();
     }
 
+    componentDidMount = () => {
+        this.setState({isLoading: true});
+        this.getInitialData();
+    }
+
+    refreshTimer = () => {
+        // const dateObj = new Date();
+        // const currentTime = dateObj.getTime();
+
+        // dateObj.setDate(new Date().getDate()+1);
+        // dateObj.setHours(0, 0, 0, 0);
+        // const tomorrowTime = dateObj.getTime();
+
+        // const timeout = this.state.refreshTimer ? this.state.refreshTimer * 60000 : tomorrowTime - currentTime;
+
+        const timeout = 1000 * 60 * 10;
+        console.log(timeout);
+
+        setTimeout(() => {
+            this.getInitialData();
+        }, timeout);
+    }
+
+    getInitialData = async() => {
+        const url = new URL('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/socialData');
+        window.location.search
+            .substring(1)
+            .split('&')
+            .map((param) => {
+                const splitParam = param.split('=');
+                if(splitParam.length === 2) {
+                    url.searchParams.append(splitParam[0], splitParam[1])
+                }
+                return null;
+            });
+        const promise = await fetch(url);
+        const response = await promise.json();
+
+        this.setState(response);
+        this.getInstaFeed()
+            .then((instaFeed) => {
+                this.setState({slideshowMedia: instaFeed, isLoading: false});
+                this.refreshTimer()
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    getInstaFeed = async() => {
+        const promise = await fetch(`https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/instaFeed?wallCode=${this.state.code}`);
+        return await promise.json();
+    }
     getNewData = () => {
-        const params = JSONdata[this.counter];
-        if(this.counter === 4) {
+        if (this.state.slideshowMedia.length === 0) return false;
+        const params = this.state.slideshowMedia[this.counter];
+        if(this.counter === this.state.slideshowMedia.length-1) {
             this.counter = 0;
         } else {
             this.counter = this.counter + 1;
@@ -149,26 +167,32 @@ class DisplayWall extends React.Component {
         const numOfSlideshows = Math.floor((window.innerWidth / 2) / 300);
         const slideshowArray = [];
 
-        for(let i = 0; i < numOfSlideshows; i++) {
-            slideshowArray.push(
-                <Grid item xs={12} md={Math.floor((12/numOfSlideshows)/2)} key={i}>
-                    {configJson.transitionType === 'fade' ? (
-                        <FadeSlideShow 
-                            getNextCard={this.getNewData}
-                            classes={classes}
-                            startTimeout={2500}
-                            transitionTime={configJson.transitionTime}
-                        />
-                    ) : (
-                        <ScrollSlideShow 
-                            getNextCard={this.getNewData}
-                            classes={classes}
-                            startTimeout={2500}
-                            transitionTime={configJson.transitionTime}
-                        />
-                    )}
-                </Grid>
-            )
+        if (this.state.slideshowMedia.length) {
+            for(let i = 0; i < numOfSlideshows; i++) {
+                slideshowArray.push(
+                    <Grid item xs={12} md={Math.floor((12/numOfSlideshows)/2)} key={i}>
+                        {this.state.transitionType === 'fade' ? (
+                            <FadeSlideShow 
+                                getNextCard={this.getNewData}
+                                classes={classes}
+                                startTimeout={2500}
+                                slideDelay={(this.state.transitionTime * 1000/numOfSlideshows) * i}
+                                transitionTime={this.state.transitionTime * 1000}
+                                cardStyles={this.state.styles.card}
+                            />
+                        ) : (
+                            <ScrollSlideShow 
+                                getNextCard={this.getNewData}
+                                classes={classes}
+                                startTimeout={2500}
+                                slideDelay={(this.state.transitionTime * 1000/numOfSlideshows) * i}
+                                transitionTime={this.state.transitionTime * 1000}
+                                cardStyles={this.state.styles.card}
+                            />
+                        )}
+                    </Grid>
+                )
+            }
         }
         return slideshowArray;
     }
@@ -177,22 +201,59 @@ class DisplayWall extends React.Component {
         const { classes, refer } = this.props;
 
         const slideShowArray = this.generateSlideshows();
+        const hasHeaderText = this.state.headerText && this.state.headerText !== '';
+        const headerStyle = this.state.styles.header;
 
         return (
-            <Grid container ref={refer} className={classes.bg}>
-                { configJson.headerText && configJson.headerText !== '' && 
-                <Grid item xs={12}>
-                    <Typography variant='h1' className={classes.header}>Collar and Comb</Typography>
+            <Grid 
+                container 
+                ref={refer} 
+                className={classes.bg}
+                style={{
+                    backgroundColor: this.state.styles.background.color || "#FFF",
+                    backgroundImage: this.state.styles.background.img ? `url('${this.state.styles.background.img }')` : "",
+                    backgroundSize: this.state.styles.background.size || "contain"
+                }}
+                direction='row'
+                wrap='wrap'
+            >
+                { hasHeaderText && 
+                <Grid 
+                    item 
+                    xs={12}
+                    style={{
+                        height: `calc(${headerStyle.fontSize} + 1rem)`
+                    }}
+                >
+                    <Typography
+                        variant='h1'
+                        className={classes.header}
+                        style={{
+                            color: headerStyle.color || '#000',
+                            textAlign: headerStyle.textAlign || 'center',
+                            fontSize: headerStyle.fontSize || '6rem'
+                        }}
+                    >{this.state.headerText}</Typography>
                 </Grid>
                 }
-                <Grid item container md={6} ref={this.videoGridRef} alignItems='center' justify='center' >
-                    <MediaPlayer media={configJson.media} classes={classes} outerRef={this.videoGridRef}/>
+                <Grid 
+                    item 
+                    container 
+                    xs={12} 
+                    spacing={Number(this.state.spacing)}
+                    style={{
+                        height: hasHeaderText ? `calc(100% - ${headerStyle.fontSize} - 1rem)` : '100%'
+                    }}
+                >
+                    <Grid item container md={6} ref={this.videoGridRef} alignItems='center' justify='center' >
+                        <MediaPlayer media={this.state.media} classes={classes} outerRef={this.videoGridRef}/>
+                    </Grid>
+                    {
+                        slideShowArray.map((Slideshow) => {
+                            return Slideshow;
+                        })
+                    }
                 </Grid>
-                {
-                    slideShowArray.map((Slideshow) => {
-                        return Slideshow;
-                    })
-                }
             </Grid>
         );
     }

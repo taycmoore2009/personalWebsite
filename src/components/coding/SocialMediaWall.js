@@ -50,6 +50,11 @@ const styles = () => ({
         minWidth: 195,
         width: 195,
     },
+    bgFileButton: {
+        width: '100%',
+        margin: '10px 0',
+        height: 56
+    },
     divider: {
         backgroundColor: '#FFF'
     },
@@ -115,6 +120,7 @@ class SocialMediaWall extends React.Component {
             headerText: '',
             currentColorChangeState: '',
             mediaDisplay: '',
+            backgroundImageName: '',
             styles: {
                 background: {
                     color: '',
@@ -164,7 +170,11 @@ class SocialMediaWall extends React.Component {
     handleChangeColor = event => {
         const params = this.state.currentColorChangeState.split('.');
         const styles = this.state.styles;
-        styles[params[0]][params[1]] = event.hex;
+        let colorString = '';
+        for(let key in event.rgb) {
+            colorString += event.rgb[key] +', ';
+        }
+        styles[params[0]][params[1]] = `rgba(${colorString.substr(0, colorString.length - 2)})`;
         this.setState({styles})
     }
 
@@ -224,7 +234,7 @@ class SocialMediaWall extends React.Component {
 
     moveMediaUp = event => {
         const media = this.state.media;
-        const currentIndex = Number(event.currentTarget.parentElement.parentElement.dataset.index);
+        const currentIndex = Number(event.currentTarget.parentElement.parentElement.parentElement.dataset.index);
         const movingMedia = media.splice(currentIndex, 1);
         media.splice(currentIndex-1, 0, movingMedia[0]);
         this.setState(media);
@@ -232,7 +242,7 @@ class SocialMediaWall extends React.Component {
 
     moveMediaDown = event => {
         const media = this.state.media;
-        const currentIndex = Number(event.currentTarget.parentElement.parentElement.dataset.index);
+        const currentIndex = Number(event.currentTarget.parentElement.parentElement.parentElement.dataset.index);
         const movingMedia = media.splice(currentIndex, 1);
         media.splice(currentIndex + 1, 0, movingMedia[0]);
         this.setState(media);
@@ -256,11 +266,9 @@ class SocialMediaWall extends React.Component {
         this.setState({loading: true});
         const timer = window.setInterval(() => {
             if(newWin.closed) {
-                this.setState({loading: false});
-                console.log("closed!");
+                this.loadSettings();
                 window.clearInterval(timer);
             }
-            
         }, 200);
     }
     generateWall = () => {
@@ -338,16 +346,42 @@ class SocialMediaWall extends React.Component {
     }
     backgroundImageUpload = (event) => {
         const file = event.target.files[0];
+        const name = file.name || this.state.code;
+        const styles = this.state.styles;
         if ( file ) {
-            const fr = new FileReader();
-            fr.onload = () => {
-                this.handleInputChangeStyle({target: {name: 'background.img', value: fr.result}});
-            }
-            fr.readAsDataURL(file);
+            const fileName = name + Date.now();
+        
+            // The name of the bucket that you have created
+            const params = {
+                Bucket: BUCKET_NAME,
+                Key: fileName, // File name you want to save as in S3
+                Body: file,
+                ACL: 'public-read'
+            };
+
+            this.setState({loading: true});
+            this.s3.upload(params, (err, data) => {
+                if (err) {
+                    this.setState({loading: false});
+                    throw err;
+                }
+                styles.background.img = data.Location;
+                this.setState({
+                    loading: false,
+                    styles,
+                    backgroundImageName: name
+                });
+            });
         } else {
             console.log('error');
         }
     }
+    removeBackgroundImg = () => {
+        const styles = this.state.styles;
+        styles.background.img = '';
+        this.setState({styles});
+    }
+    
     render = () => {
         const { classes } = this.props;
         const { styles, currentColorChangeState } = this.state;
@@ -387,6 +421,7 @@ class SocialMediaWall extends React.Component {
                             handleCurrentColorChangeState={this.handleCurrentColorChangeState}
                             handleInputChangeStyle={this.handleInputChangeStyle}
                             backgroundImageUpload={this.backgroundImageUpload}
+                            removeBackgroundImg={this.removeBackgroundImg}
                             state={this.state}
                             classes={classes}
                         />

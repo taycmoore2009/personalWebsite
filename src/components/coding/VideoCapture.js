@@ -16,7 +16,7 @@ class VideoCapture extends React.Component {
     }
 
     componentDidMount = () => {
-        this.initiateCamera();
+        // this.initiateCamera();
     }
 
     initiateCamera = () => {
@@ -54,8 +54,19 @@ class VideoCapture extends React.Component {
     }
 
     render = () => {
+        const navigatorUserAgent = navigator.userAgent;
+        let capture = 'false';
+
+        const isiOS = /iP(ad|hone|od)/i.test(navigatorUserAgent);
+        const isChrome = /Chrome/i.test(navigatorUserAgent);
+        const isMobileSafari = /Safari/i.test(navigatorUserAgent) && /AppleWebKit/i.test(navigatorUserAgent);
+      
+        alert(`is this safari on iPad?? Answer: ${!isiOS && !isChrome && isMobileSafari ? 'yes' : 'no'}`);
+
         return (
             <div>
+                
+                <input type="file" accept="image/*" capture={capture}></input>
                 <div className="camera">
                     <video width='300px' ref={this.videoRef}>Video stream not available.</video>
                     <button onClick={this.flipCamera}>Flip Camera</button>

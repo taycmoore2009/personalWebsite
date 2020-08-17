@@ -36,17 +36,26 @@ export default function General(props) {
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
                 <ContainedButtons
-                        component='label'
-                        name='newMediaButton'
-                        classes={props.classes.button}
-                    >
-                    Upload Image
+                    component='label'
+                    name='newMediaButton'
+                    classes={`${props.classes.button} ${props.classes.fileButton} ${props.classes.bgFileButton}`}
+                >
+                    {props.state.backgroundImageName ? `file: ${props.state.backgroundImageName}` : 'Select Background Image'}
                     <input 
                         accept="image/x-png,image/gif,image/jpeg"
                         onChange={props.backgroundImageUpload}
                         type="file"
                         style={{display: 'none'}}
                     />
+                </ContainedButtons>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <ContainedButtons
+                    onClick={props.removeBackgroundImg}
+                    name='newMediaButton'
+                    classes={`${props.classes.button} ${props.classes.fileButton} ${props.classes.bgFileButton}`}
+                >
+                    Remove Background Image
                 </ContainedButtons>
             </Grid>
             <Grid item xs={12}><Typography variant='h5'>Header Title</Typography></Grid>

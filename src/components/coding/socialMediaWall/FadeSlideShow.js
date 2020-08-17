@@ -54,11 +54,12 @@ export default class SlideShow extends React.Component {
                         return <SocialCard
                             key={i}
                             classes={classes}
-                            name={slide.name}
-                            minutes={slide.minutes}
-                            img={slide.img}
-                            text={slide.text}
+                            name={slide.username}
+                            minutes={slide.timestamp}
+                            img={slide.thumbnail_url || slide.media_url}
+                            text={slide.caption}
                             styles={classes}
+                            customStyles={this.props.cardStyles}
                         />
                     })}
                 </Grid>

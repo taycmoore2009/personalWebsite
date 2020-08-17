@@ -83,8 +83,10 @@ export default function CustomMedia(props) {
                             <ListItem button key={index} className={props.classes.listItem} data-index={index}>
                                 {props.state.media.length > 1 &&
                                     <ListItemIcon>
-                                        {index !== 0 && <KeyboardArrowUp onClick={props.moveMediaUp}/>}
-                                        {index !== props.state.media.length -1 && <KeyboardArrowDown onClick={props.moveMediaDown}/>}
+                                        <div>
+                                            {index !== 0 ? <KeyboardArrowUp onClick={props.moveMediaUp}/> : <div></div>}
+                                            {index !== props.state.media.length -1 ? <KeyboardArrowDown onClick={props.moveMediaDown}/> : <div></div>}
+                                        </div>
                                     </ListItemIcon>
                                 }
                                 <ListItemText onClick={props.showMedia} data-media={media.link} primary={media.title} />
