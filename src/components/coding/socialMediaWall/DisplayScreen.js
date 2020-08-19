@@ -19,7 +19,14 @@ const styles = () => ({
     videoMedia: {
         maxWidth: 'calc(100% - 20px)',
         margin: '10px 0',
-        maxHeight: 'calc(100% - 20px)'
+        maxHeight: 'calc(100% - 20px)',
+    },
+    imgMedia: {
+        width: 'calc(100% - 20px)',
+        height: 'calc(100% - 20px)',
+        'background-size': 'contain',
+        'background-position': 'center center',
+        'background-repeat': 'no-repeat'
     },
     slideShowContainer: {
         position: 'relative',
@@ -59,6 +66,7 @@ class DisplayWall extends React.Component {
         super(props);
 
         this.state = {
+            slideshowWidth: Math.floor((12/Math.floor((window.innerWidth / 2) / 400))/2),
             media: [],
             slideshowMedia: [],
             isLoading: false,
@@ -164,36 +172,50 @@ class DisplayWall extends React.Component {
 
     generateSlideshows = () => {
         const { classes } = this.props;
-        const numOfSlideshows = Math.floor((window.innerWidth / 2) / 300);
-        const slideshowArray = [];
-
-        if (this.state.slideshowMedia.length) {
-            for(let i = 0; i < numOfSlideshows; i++) {
-                slideshowArray.push(
-                    <Grid item xs={12} md={Math.floor((12/numOfSlideshows)/2)} key={i}>
-                        {this.state.transitionType === 'fade' ? (
-                            <FadeSlideShow 
-                                getNextCard={this.getNewData}
-                                classes={classes}
-                                startTimeout={2500}
-                                slideDelay={(this.state.transitionTime * 1000/numOfSlideshows) * i}
-                                transitionTime={this.state.transitionTime * 1000}
-                                cardStyles={this.state.styles.card}
-                            />
-                        ) : (
-                            <ScrollSlideShow 
-                                getNextCard={this.getNewData}
-                                classes={classes}
-                                startTimeout={2500}
-                                slideDelay={(this.state.transitionTime * 1000/numOfSlideshows) * i}
-                                transitionTime={this.state.transitionTime * 1000}
-                                cardStyles={this.state.styles.card}
-                            />
-                        )}
-                    </Grid>
-                )
-            }
-        }
+        const slideshowArray = this.state.slideshowMedia.length === 0 ? [] : [
+            <Grid item xs={12} md={this.state.slideshowWidth} key={1}>
+                {this.state.transitionType === 'fade' ? (
+                    <FadeSlideShow 
+                        getNextCard={this.getNewData}
+                        classes={classes}
+                        startTimeout={2500}
+                        slideDelay={(this.state.transitionTime * 1000/2) * 1}
+                        transitionTime={this.state.transitionTime * 1000}
+                        cardStyles={this.state.styles.card}
+                    />
+                ) : (
+                    <ScrollSlideShow 
+                        getNextCard={this.getNewData}
+                        classes={classes}
+                        startTimeout={2500}
+                        slideDelay={(this.state.transitionTime * 1000/2) * 1}
+                        transitionTime={this.state.transitionTime * 1000}
+                        cardStyles={this.state.styles.card}
+                    />
+                )}
+            </Grid>,
+            <Grid item xs={12} md={this.state.slideshowWidth} key={2}>
+                {this.state.transitionType === 'fade' ? (
+                    <FadeSlideShow 
+                        getNextCard={this.getNewData}
+                        classes={classes}
+                        startTimeout={2500}
+                        slideDelay={(this.state.transitionTime * 1000/2) * 2}
+                        transitionTime={this.state.transitionTime * 1000}
+                        cardStyles={this.state.styles.card}
+                    />
+                ) : (
+                    <ScrollSlideShow 
+                        getNextCard={this.getNewData}
+                        classes={classes}
+                        startTimeout={2500}
+                        slideDelay={(this.state.transitionTime * 1000/2) * 2}
+                        transitionTime={this.state.transitionTime * 1000}
+                        cardStyles={this.state.styles.card}
+                    />
+                )}
+            </Grid>
+        ];
         return slideshowArray;
     }
 
@@ -242,17 +264,32 @@ class DisplayWall extends React.Component {
                     xs={12} 
                     spacing={Number(this.state.spacing)}
                     style={{
-                        height: hasHeaderText ? `calc(100% - ${headerStyle.fontSize} - 1rem)` : '100%'
+                        height: hasHeaderText ? `calc(100% - ${headerStyle.fontSize} - 1rem)` : '100%',
+                        margin: '0 8px'
                     }}
                 >
-                    <Grid item container md={6} ref={this.videoGridRef} alignItems='center' justify='center' >
-                        <MediaPlayer media={this.state.media} classes={classes} outerRef={this.videoGridRef}/>
+                {this.state.layout === 'mediaBox' ? (
+                    <Grid item container xs={12} ref={this.videoGridRef} alignItems='center' justify='center' >
+                        <MediaPlayer
+                            media={this.state.media}
+                            classes={classes}
+                            outerRef={this.videoGridRef}
+                        />
                     </Grid>
-                    {
-                        slideShowArray.map((Slideshow) => {
-                            return Slideshow;
-                        })
-                    }
+                    ) : ['leftMedia', 'rightMedia'].map((media, index) => {
+                        return this.state.layout === media ? (
+                            <Grid key={0} item container xs={12} md={12 - (this.state.slideshowWidth * 2)} ref={this.videoGridRef} alignItems='center' justify='center' >
+                                <MediaPlayer
+                                    media={this.state.media}
+                                    classes={classes}
+                                    outerRef={this.videoGridRef}
+                                />
+                            </Grid>
+                        ) : slideShowArray.map((Slideshow) => {
+                                return Slideshow;
+                            })
+                    })
+                }
                 </Grid>
             </Grid>
         );

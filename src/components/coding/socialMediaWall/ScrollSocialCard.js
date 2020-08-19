@@ -18,6 +18,7 @@ export default class SocialCard extends React.Component {
     render() {
         const { classes, name, img, minutes, text } = this.props;
         const imgURL = `${img}`;
+        const date = new Date(minutes);
 
         return (
             <Card 
@@ -32,8 +33,7 @@ export default class SocialCard extends React.Component {
             >
                 <CardHeader
                     avatar={(<Instagram/>)}
-                    title={`@${name}`}
-                    subheader={`${minutes} minutes ago`}
+                    title={(<div>@{name}<br/>{date.toDateString()}</div>)}
                 />
                 <img src={imgURL} title='Instagram Card' alt='Instagram Card' className={classes.media}/>
                 <CardContent>
