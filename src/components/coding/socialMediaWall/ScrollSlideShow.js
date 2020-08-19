@@ -13,7 +13,7 @@ export default class SlideShow extends React.Component {
 
         for(var i = 0; i < numOfSlides; i++){
             const nextCard = this.props.getNextCard();
-            if (nextCard) slides.push(this.props.getNextCard());
+            if (nextCard) slides.push({...this.props.getNextCard(), key: i});
         }
 
         this.state = {
@@ -31,15 +31,19 @@ export default class SlideShow extends React.Component {
 
     startTimer = () => {
         const transitionTime = this.props.transitionTime;
+        let slideCounter = this.state.slides.length;
         setInterval(() => {
             const newSlide = this.props.getNextCard();
             const slides = this.state.slides;
-            if (newSlide) slides.push(newSlide);
+            if (newSlide) {
+                slides.push({...newSlide, key: slideCounter});
+                slideCounter = slideCounter === 100 ? 0 : slideCounter + 1;
+            }
             this.setState({
                 slides,
                 isScrolling: true
             });
-            const height = this.innerSlideshowRef.current.firstChild ? this.innerSlideshowRef.current.firstChild.offsetHeight + 12 : 0;
+            const height = this.innerSlideshowRef.current.firstChild ? this.innerSlideshowRef.current.firstChild.offsetHeight + 10 : 0;
 
             setTimeout(() => {
                 this.setState({
@@ -80,7 +84,7 @@ export default class SlideShow extends React.Component {
                     style={{top: `${this.state.scrollHeight}px`}}
                 >
                     {this.state.slides.map((slide, i) => {
-                        return <div key={i}>
+                        return <div key={slide.key}>
                             <SocialCard
                                 classes={classes}
                                 name={slide.username}

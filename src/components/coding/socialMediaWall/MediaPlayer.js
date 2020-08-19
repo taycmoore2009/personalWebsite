@@ -35,12 +35,14 @@ export default class MediaPlayer extends React.Component {
                 src.includes('personalwebsitefiles')
             ) {
                 return (
-                    <img
+                    <div
                         onLoad={this.startTimer}
-                        src={src}
+                        style={{
+                            backgroundImage: `url('${src}')`
+                        }}
                         alt='special media'
-                        className={classes.videoMedia}
-                    />
+                        className={`${classes.imgMedia}`}
+                    ></div>
                 );
             }
 
