@@ -66,7 +66,6 @@ class DisplayWall extends React.Component {
         super(props);
 
         this.state = {
-            slideshowWidth: Math.floor((12/Math.floor((window.innerWidth / 2) / 400))/2),
             media: [],
             slideshowMedia: [],
             isLoading: false,
@@ -173,7 +172,7 @@ class DisplayWall extends React.Component {
     generateSlideshows = () => {
         const { classes } = this.props;
         const slideshowArray = this.state.slideshowMedia.length === 0 ? [] : [
-            <Grid item xs={12} md={this.state.slideshowWidth} key={1}>
+            <Grid item xs={12} md={2} key={1}>
                 {this.state.transitionType === 'fade' ? (
                     <FadeSlideShow 
                         getNextCard={this.getNewData}
@@ -194,7 +193,7 @@ class DisplayWall extends React.Component {
                     />
                 )}
             </Grid>,
-            <Grid item xs={12} md={this.state.slideshowWidth} key={2}>
+            <Grid item xs={12} md={2} key={2}>
                 {this.state.transitionType === 'fade' ? (
                     <FadeSlideShow 
                         getNextCard={this.getNewData}
@@ -278,7 +277,7 @@ class DisplayWall extends React.Component {
                     </Grid>
                     ) : ['leftMedia', 'rightMedia'].map((media, index) => {
                         return this.state.layout === media ? (
-                            <Grid key={0} item container xs={12} md={12 - (this.state.slideshowWidth * 2)} ref={this.videoGridRef} alignItems='center' justify='center' >
+                            <Grid key={0} item container xs={12} md={8} ref={this.videoGridRef} alignItems='center' justify='center' >
                                 <MediaPlayer
                                     media={this.state.media}
                                     classes={classes}
