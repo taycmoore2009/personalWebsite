@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 
 import { withStyles } from '@material-ui/styles';
 import AWS from 'aws-sdk';
-import { Grid, Typography, Divider, Dialog, DialogTitle, CircularProgress } from '@material-ui/core';
+import { Grid, Typography, Divider, Dialog, DialogTitle, CircularProgress, Switch } from '@material-ui/core';
 import { SketchPicker } from 'react-color';
 
 import General from './socialMediaAdmin/General';
@@ -43,12 +43,14 @@ const styles = () => ({
     button: {
         minWidth: 200,
         display: 'inline-block',
-        margin: '10px 10px',
+        margin: '10px 10px 10px 0',
         textAlign: 'center'
     },
     fileButton: {
-        minWidth: 195,
-        width: 195,
+        width: '100%',
+        height: 56,
+        margin: '10px 0 0',
+        textAlign: 'left'
     },
     bgFileButton: {
         width: '100%',
@@ -120,6 +122,8 @@ class SocialMediaWall extends React.Component {
             headerText: '',
             currentColorChangeState: '',
             mediaDisplay: '',
+            customSlideshow: [],
+            showCustomSlideshow: false,
             backgroundImageName: '',
             styles: {
                 background: {
@@ -140,18 +144,11 @@ class SocialMediaWall extends React.Component {
             },
         };
 
-        this.newMediaTitleRefer = React.createRef();
-        this.newMediaLinkRefer = React.createRef();
-        this.newMediaLengthRefer = React.createRef();
-        this.newMediaImageTitleRefer = React.createRef();
-        this.newMediaImageLengthRefer = React.createRef();
         this.newInstaTagsRefer = React.createRef();
 
-        // Enter copied or downloaded access ID and secret key here
         const ID = envConfig.s3ID;
         const SECRET = envConfig.s3Secret;
 
-        console.log(this);
         this.s3 = new AWS.S3({
             accessKeyId: ID,
             secretAccessKey: SECRET
@@ -207,45 +204,16 @@ class SocialMediaWall extends React.Component {
         });
     }
 
-    addNewMedia = (event, data) => {
-        const media = this.state.media;
-        const params = event ? {
-            title: this.newMediaTitleRefer.current.value,
-            link: this.newMediaLinkRefer.current.value,
-            length: this.newMediaLengthRefer.current.value
-        } : data;
-        media.push(params);
-        this.newMediaTitleRefer.current.value = '';
-        this.newMediaLinkRefer.current.value = '';
-        this.newMediaLengthRefer.current.value = '';
-        this.setState({loading: false});
+    setLoading = state => {
+        this.setState({loading: state});
     }
 
-    showMedia = event => {
-        this.setState({mediaDisplay: event.currentTarget.dataset.media});
-    }
-
-    deleteMedia = event => {
-        const {media, mediaDisplay} = this.state;
-        const removedMedia = media.splice(event.currentTarget.previousSibling.dataset.index, 1);
-        const newObj = removedMedia[0].link === mediaDisplay ? {mediaDisplay: '', media} : media;
-        this.setState(newObj);
-    }
-
-    moveMediaUp = event => {
-        const media = this.state.media;
-        const currentIndex = Number(event.currentTarget.parentElement.parentElement.parentElement.dataset.index);
-        const movingMedia = media.splice(currentIndex, 1);
-        media.splice(currentIndex-1, 0, movingMedia[0]);
+    setMedia = media => {
         this.setState(media);
     }
 
-    moveMediaDown = event => {
-        const media = this.state.media;
-        const currentIndex = Number(event.currentTarget.parentElement.parentElement.parentElement.dataset.index);
-        const movingMedia = media.splice(currentIndex, 1);
-        media.splice(currentIndex + 1, 0, movingMedia[0]);
-        this.setState(media);
+    setCustomSlideshow = customSlideshow => {
+        this.setState(customSlideshow);
     }
 
     addNewInstaTag = () => {
@@ -271,6 +239,7 @@ class SocialMediaWall extends React.Component {
             }
         }, 200);
     }
+
     generateWall = () => {
         this.setState({loading: true});
         this.postWall(this.state)
@@ -283,49 +252,6 @@ class SocialMediaWall extends React.Component {
             });
     }
 
-    validate = () => {
-        
-    }
-
-    singleFileChangedHandler = event => {
-        this.setState({
-            selectedFile: event.target.files
-        });
-    }
-
-    customMediaImageSet = (event) => {
-        this.setState({
-            selectedFile: event.target.files[0]
-        });
-    }
-    customMediaImageUpload = () => {
-        const file = this.state.selectedFile;
-        const name = this.newMediaImageTitleRefer.current.value;
-        const fileName = name + Date.now();
-        
-        // The name of the bucket that you have created
-        const params = {
-            Bucket: BUCKET_NAME,
-            Key: fileName, // File name you want to save as in S3
-            Body: file,
-            ACL: 'public-read'
-        };
-
-        this.setState({loading: true});
-        this.s3.upload(params, (err, data) => {
-            if (err) {
-                throw err;
-            }
-            this.addNewMedia(false, {
-                title: name || this.state.media.length + 1,
-                link: data.Location,
-                length: this.newMediaImageLengthRefer.current.value || 30
-            });
-            this.setState({
-                selectedFile: ''
-            });
-        });
-    }
     getWall = async (data) => {
         const url = new URL('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/socialData');
         Object.keys(data).forEach(key => url.searchParams.append(key, data[key]))
@@ -417,6 +343,24 @@ class SocialMediaWall extends React.Component {
                     </Grid>
                     <Grid item xs={12}><Divider className={classes.divider}/></Grid>
                     <Grid item xs={12}>
+                        <Grid item xs={12}>
+                            <Typography variant='h4'>
+                                Custom Slideshow <Switch onChange={(event, value) => {this.setState({showCustomSlideshow: value})}}></Switch>
+                            </Typography>
+                        </Grid>
+                        {this.state.showCustomSlideshow && <CustomMedia
+                                setLoading={this.setLoading}
+                                classes={classes}
+                                media={this.state.customSlideshow}
+                                setMedia={this.setCustomSlideshow}
+                                envConfig={envConfig}
+                                bucketName={BUCKET_NAME}
+                                s3={this.s3}
+                            />
+                        }
+                    </Grid>
+                    <Grid item xs={12}><Divider className={classes.divider}/></Grid>
+                    <Grid item xs={12}>
                         <Styling
                             handleCurrentColorChangeState={this.handleCurrentColorChangeState}
                             handleInputChangeStyle={this.handleInputChangeStyle}
@@ -428,21 +372,16 @@ class SocialMediaWall extends React.Component {
                     </Grid>
                     <Grid item xs={12}><Divider className={classes.divider}/></Grid>
                     <Grid item xs={12}>
+                    <Grid item xs={12}><Typography variant='h4'>Manage Custom Media</Typography></Grid>
                         <CustomMedia
-                            addNewMedia={this.addNewMedia}
-                            newMediaTitleRefer={this.newMediaTitleRefer}
-                            newMediaLinkRefer={this.newMediaLinkRefer}
-                            newMediaLengthRefer={this.newMediaLengthRefer}
-                            newMediaImageTitleRefer={this.newMediaImageTitleRefer}
-                            newMediaImageLengthRefer={this.newMediaImageLengthRefer}
-                            customMediaImageUpload={this.customMediaImageUpload}
-                            customMediaImageSet={this.customMediaImageSet}
-                            showMedia={this.showMedia}
-                            deleteMedia={this.deleteMedia}
-                            moveMediaUp={this.moveMediaUp}
-                            moveMediaDown={this.moveMediaDown}
+                            allowVideos={true}
+                            setLoading={this.setLoading}
                             classes={classes}
-                            state={this.state}
+                            media={this.state.media}
+                            setMedia={this.setMedia}
+                            envConfig={envConfig}
+                            bucketName={BUCKET_NAME}
+                            s3={this.s3}
                         />
                     </Grid>
                 </Grid>
