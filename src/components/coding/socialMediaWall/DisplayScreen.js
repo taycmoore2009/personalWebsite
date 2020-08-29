@@ -53,7 +53,8 @@ const styles = () => ({
     },
     media: {
         maxWidth: '100%',
-        maxHeight: '100%'
+        maxHeight: '100%',
+        minWidth: '100%'
     }
 });
 
@@ -66,9 +67,9 @@ class DisplayWall extends React.Component {
         super(props);
 
         this.state = {
-            slideshowWidth: Math.floor((12/Math.floor((window.innerWidth / 2) / 400))/2),
             media: [],
             slideshowMedia: [],
+            customSlideshow: [],
             isLoading: false,
             code: '',
             selectedFile: null,
@@ -101,6 +102,7 @@ class DisplayWall extends React.Component {
             }
         }
         this.counter = 0;
+        this.customCounter = 0;
 
         this.videoGridRef = React.createRef();
     }
@@ -170,10 +172,24 @@ class DisplayWall extends React.Component {
         return params;
     }
 
+    getNewCustomData = () => {
+        console.log(this.state.customSlideshow);
+        if (this.state.customSlideshow.length === 0) return false;
+
+        const params = this.state.customSlideshow[this.customCounter];
+        if(this.customCounter === this.state.customSlideshow.length-1) {
+            this.customCounter = 0;
+        } else {
+            this.customCounter = this.customCounter + 1;
+        }
+        console.log(params);
+        return params;
+    }
+
     generateSlideshows = () => {
         const { classes } = this.props;
         const slideshowArray = this.state.slideshowMedia.length === 0 ? [] : [
-            <Grid item xs={12} md={this.state.slideshowWidth} key={1}>
+            <Grid item xs={12} md={2} key={1}>
                 {this.state.transitionType === 'fade' ? (
                     <FadeSlideShow 
                         getNextCard={this.getNewData}
@@ -194,24 +210,26 @@ class DisplayWall extends React.Component {
                     />
                 )}
             </Grid>,
-            <Grid item xs={12} md={this.state.slideshowWidth} key={2}>
+            <Grid item xs={12} md={2} key={2}>
                 {this.state.transitionType === 'fade' ? (
                     <FadeSlideShow 
-                        getNextCard={this.getNewData}
+                        getNextCard={this.state.customSlideshow.length !== 0 ? this.getNewCustomData : this.getNewData}
                         classes={classes}
                         startTimeout={2500}
                         slideDelay={(this.state.transitionTime * 1000/2) * 2}
                         transitionTime={this.state.transitionTime * 1000}
                         cardStyles={this.state.styles.card}
+                        customSlide={this.state.customSlideshow.length !== 0}
                     />
                 ) : (
                     <ScrollSlideShow 
-                        getNextCard={this.getNewData}
+                        getNextCard={this.state.customSlideshow.length !== 0 ? this.getNewCustomData : this.getNewData}
                         classes={classes}
                         startTimeout={2500}
                         slideDelay={(this.state.transitionTime * 1000/2) * 2}
                         transitionTime={this.state.transitionTime * 1000}
                         cardStyles={this.state.styles.card}
+                        customSlide={this.state.customSlideshow.length !== 0}
                     />
                 )}
             </Grid>
@@ -278,7 +296,7 @@ class DisplayWall extends React.Component {
                     </Grid>
                     ) : ['leftMedia', 'rightMedia'].map((media, index) => {
                         return this.state.layout === media ? (
-                            <Grid key={0} item container xs={12} md={12 - (this.state.slideshowWidth * 2)} ref={this.videoGridRef} alignItems='center' justify='center' >
+                            <Grid key={0} item container xs={12} md={8} ref={this.videoGridRef} alignItems='center' justify='center' >
                                 <MediaPlayer
                                     media={this.state.media}
                                     classes={classes}

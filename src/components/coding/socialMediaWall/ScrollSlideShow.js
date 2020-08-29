@@ -3,12 +3,14 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 
 import SocialCard from './ScrollSocialCard';
+import CustomCard from './ScrollCustomCard';
 
 export default class SlideShow extends React.Component {
     
     constructor(props) {
         super(props);
-        const numOfSlides = Math.ceil(window.innerHeight /500) + 1;
+        const slideHeight = this.props.customSlide ? 100 : 350;
+        const numOfSlides = Math.ceil(window.innerHeight /slideHeight) + 1;
         const slides = []
 
         for(var i = 0; i < numOfSlides; i++){
@@ -43,7 +45,7 @@ export default class SlideShow extends React.Component {
                 slides,
                 isScrolling: true
             });
-            const height = this.innerSlideshowRef.current.firstChild ? this.innerSlideshowRef.current.firstChild.offsetHeight + 10 : 0;
+            const height = this.innerSlideshowRef.current.firstChild ? this.innerSlideshowRef.current.firstChild.offsetHeight : 0;
 
             setTimeout(() => {
                 this.setState({
@@ -67,6 +69,7 @@ export default class SlideShow extends React.Component {
 
     render() {
         const { classes } = this.props;
+        console.log(this.state);
 
         return (
             <Grid
@@ -75,26 +78,35 @@ export default class SlideShow extends React.Component {
                 justify='center'
                 className={classes.slideShowContainer}
             >
-                <Grid 
+                <Grid
+                    container
                     item 
-                    col={12} 
+                    xs={12} 
                     className={`${classes.innerSlideshow} ${this.state.isScrolling && classes.transition}`}
                     ref={this.innerSlideshowRef}
-                    t={this.state.scrollHeight}
+                    justify='center'
                     style={{top: `${this.state.scrollHeight}px`}}
                 >
                     {this.state.slides.map((slide, i) => {
-                        return <div key={slide.key}>
-                            <SocialCard
-                                classes={classes}
-                                name={slide.username}
-                                minutes={slide.timestamp}
-                                img={slide.thumbnail_url || slide.media_url}
-                                text={slide.caption}
-                                styles={classes}
-                                customStyles={this.props.cardStyles}
-                            />
-                        </div>
+                        return <Grid item xs={12} key={slide.key}>
+                            {this.props.customSlide ? (
+                                <CustomCard
+                                    classes={classes}
+                                    name={slide.title}
+                                    img={slide.link}
+                                    customStyles={this.props.cardStyles}
+                                />
+                            ) : (
+                                <SocialCard
+                                    classes={classes}
+                                    name={slide.username || slide.title}
+                                    minutes={slide.timestamp || ''}
+                                    img={slide.thumbnail_url || slide.media_url || slide.link}
+                                    text={slide.caption || ''}
+                                    customStyles={this.props.cardStyles}
+                                />
+                            )}
+                        </Grid>
                     })}
                 </Grid>
             </Grid>
