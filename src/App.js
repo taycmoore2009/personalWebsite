@@ -15,6 +15,8 @@ import Pets from './components/baseScreens/Pets';
 import Finger from './components/baseScreens/Finger';
 
 import DisplayWall from './components/coding/socialMediaWall/DisplayScreen';
+import CollarAndCombAdmin from './components/coding/socialMediaAdmin/CollarAndCombAdmin.js';
+import CollarAndComb from './components/coding/socialMediaWall/CollarAndComb';
 
 const styles = theme => ({
   '@media (min-width: 600px)': {
@@ -101,6 +103,12 @@ class App extends React.Component {
         <Switch>
           <Route path='/mediaWall'>
             <DisplayWall/>
+          </Route>
+          <Route path='/collarandcomb/admin'>
+            <CollarAndCombAdmin/>
+          </Route>
+          <Route path='/collarandcomb'>
+            <CollarAndComb/>
           </Route>
           <Route>
             <CssBaseline />
