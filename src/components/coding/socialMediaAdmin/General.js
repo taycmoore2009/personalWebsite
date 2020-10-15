@@ -6,64 +6,67 @@ import SelectInput from '../../forms/SelectInput';
 import ContainedButtons from '../../forms/Button';
 
 export default function General(props) {
+    const {showLogin = true} = props;
     return (
         <Grid container spacing={2} justify='center'>
             <Grid item xs={12}><Typography variant='h4'>General Settings</Typography></Grid>
-            <Grid item xs={12} sm={12} md={12}>
-                <Grid container spacing={2}>
-                    <Grid item sm={12} md={6}>
-                        <TextInput
-                            label='Display Screen Name'
-                            onChange={props.handleInputChange}
-                            color='secondary'
-                            name='code'
-                            value={props.state.code}
-                        />
-                    </Grid>
-                    <Grid item sm={12} md={6}>
-                        <ContainedButtons
-                            onClick={props.validate}
-                            name='code'
-                            classes={props.classes.button}
-                        >
-                            Check Availability
-                        </ContainedButtons>
-                        <ContainedButtons
-                            classes={props.classes.button}
-                            onClick={props.generateWall}
-                        >Save Wall</ContainedButtons>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12}>
-                <Grid container spacing={2}>
-                    <Grid item sm={12} md={6}>
-                        <TextInput
-                            label='Display Screen Key'
-                            onChange={props.handleInputChange}
-                            color='secondary'
-                            name='secretKey'
-                            value={props.state.secretKey}
-                        />
-                    </Grid>
-                    <Grid item sm={12} md={6}>
-                        <ContainedButtons
-                            onClick={props.generatekey}
-                            name='code'
-                            classes={props.classes.button}
-                        >
-                            Randomly Generate
-                        </ContainedButtons>
-                        <ContainedButtons
-                            onClick={props.loadSettings}
-                            name='code'
-                            classes={props.classes.button}
-                        >
-                            Load
-                        </ContainedButtons>
+            {showLogin && (<React.Fragment>
+                <Grid item xs={12} sm={12} md={12}>
+                    <Grid container spacing={2}>
+                        <Grid item sm={12} md={6}>
+                            <TextInput
+                                label='Display Screen Name'
+                                onChange={props.handleInputChange}
+                                color='secondary'
+                                name='code'
+                                value={props.state.code}
+                            />
+                        </Grid>
+                        <Grid item sm={12} md={6}>
+                            <ContainedButtons
+                                onClick={props.validate}
+                                name='code'
+                                classes={props.classes.button}
+                            >
+                                Check Availability
+                            </ContainedButtons>
+                            <ContainedButtons
+                                classes={props.classes.button}
+                                onClick={props.generateWall}
+                            >Save Wall</ContainedButtons>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
+                <Grid item xs={12} sm={12} md={12}>
+                    <Grid container spacing={2}>
+                        <Grid item sm={12} md={6}>
+                            <TextInput
+                                label='Display Screen Key'
+                                onChange={props.handleInputChange}
+                                color='secondary'
+                                name='secretKey'
+                                value={props.state.secretKey}
+                            />
+                        </Grid>
+                        <Grid item sm={12} md={6}>
+                            <ContainedButtons
+                                onClick={props.generatekey}
+                                name='code'
+                                classes={props.classes.button}
+                            >
+                                Randomly Generate
+                            </ContainedButtons>
+                            <ContainedButtons
+                                onClick={props.loadSettings}
+                                name='code'
+                                classes={props.classes.button}
+                            >
+                                Load
+                            </ContainedButtons>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </React.Fragment>)}
             {[{
                 label: 'Slide Delay',
                 value: 'transitionTime'

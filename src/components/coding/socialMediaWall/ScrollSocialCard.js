@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Card, CardHeader, CardContent, Typography } from '@material-ui/core';
-import { Instagram } from '@material-ui/icons';
+import { Card, CardContent, Typography } from '@material-ui/core';
 
 export default class SocialCard extends React.Component {
 
@@ -16,25 +15,20 @@ export default class SocialCard extends React.Component {
     }
 
     render() {
-        const { classes, name, img, minutes, text } = this.props;
+        const { classes, img, text } = this.props;
         const imgURL = `${img}`;
-        const date = new Date(minutes);
 
         return (
             <Card 
                 className={classes.card}
                 style={{
-                    border: `1px solid ${this.props.customStyles.borColor || '#c49c5e'}`,
+                    border: `1px solid ${this.props.customStyles.borColor || '#FFF'}`,
                     backgroundColor: this.props.customStyles.bgColor || '#000',
                     color: this.props.customStyles.color || '#000'
                 }} 
                 variant='elevation'
                 key={this.props.key}
             >
-                <CardHeader
-                    avatar={(<Instagram/>)}
-                    title={(<div>@{name}<br/>{date.toDateString()}</div>)}
-                />
                 <img src={imgURL} title='Instagram Card' alt='Instagram Card' className={classes.media}/>
                 <CardContent>
                     <Typography>{text}</Typography>

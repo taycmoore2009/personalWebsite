@@ -123,7 +123,6 @@ class DisplayWall extends React.Component {
         // const timeout = this.state.refreshTimer ? this.state.refreshTimer * 60000 : tomorrowTime - currentTime;
 
         const timeout = 1000 * 60 * 10;
-        console.log(timeout);
 
         setTimeout(() => {
             this.getInitialData();
@@ -173,7 +172,6 @@ class DisplayWall extends React.Component {
     }
 
     getNewCustomData = () => {
-        console.log(this.state.customSlideshow);
         if (this.state.customSlideshow.length === 0) return false;
 
         const params = this.state.customSlideshow[this.customCounter];
@@ -182,7 +180,6 @@ class DisplayWall extends React.Component {
         } else {
             this.customCounter = this.customCounter + 1;
         }
-        console.log(params);
         return params;
     }
 
