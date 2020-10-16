@@ -30,7 +30,9 @@ export default class SocialCard extends React.Component {
                 key={this.props.key}
             >
                 <img src={imgURL} title='Instagram Card' alt='Instagram Card' className={classes.media}/>
-                <CardContent>
+                <CardContent
+                    style={{paddingBottom: 10}}
+                >
                     <Typography>{text}</Typography>
                 </CardContent>
             </Card>

@@ -32,26 +32,29 @@ export default class YelpReviews extends React.Component {
 
         
         document.body.appendChild(this.yelpScript());
-        setInterval(() => {
-            index = index+1 >= slideCounter ? 0 : index+1;
-            this.layoutRef.current.style.opacity = 0;
-            document.getElementById('yelpReviewScript').remove();
-            setTimeout(() => {
-                this.setState({
-                    opacity: 0,
-                    currentSlide: slides[index]
-                });
-                document.body.appendChild(this.yelpScript());
+        if (this.props.reviews.length > 1) {
+            setInterval(() => {
+                index = index+1 >= slideCounter ? 0 : index+1;
+                this.layoutRef.current.style.opacity = 0;
+                document.getElementById('yelpReviewScript').remove();
                 setTimeout(() => {
                     this.setState({
-                        opacity: 1
+                        opacity: 0,
+                        currentSlide: slides[index]
                     });
+                    document.body.appendChild(this.yelpScript());
+                    setTimeout(() => {
+                        this.setState({
+                            opacity: 1
+                        });
+                    }, 2000);
                 }, 2000);
-            }, 2000);
-        }, 60000);
+            }, 60000);
+        }
     }
 
     render() {
+        
         return (
             <Grid
                 container
@@ -63,7 +66,9 @@ export default class YelpReviews extends React.Component {
                     opacity: this.state.opacity
                 }}
             >
-                <div dangerouslySetInnerHTML={{__html: this.state.currentSlide}} />
+                {this.state.currentSlide && (
+                    <span className="yelp-review" data-review-id={this.state.currentSlide.value} data-hostname="www.yelp.com">{this.state.currentSlide.title}</span>)
+                }
             </Grid>
         )
     }

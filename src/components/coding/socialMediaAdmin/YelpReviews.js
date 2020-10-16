@@ -30,10 +30,9 @@ export default function YelpReviews(props) {
             <Grid item xs={12} md={6}>
                     <List dense={true}>
                         {props.reviews.map((review, index) => {
-                            console.log(review);
                             return (
                                 <ListItem button key={index} className={props.classes.listItem} data-index={index}>
-                                    <ListItemText primary={review}/>
+                                    <ListItemText primary={review.title}/>
                                     <ListItemSecondaryAction onClick={() => {props.removeYelpReview(index)}}>
                                         <IconButton edge="end" aria-label="delete">
                                             <Delete />

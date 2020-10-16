@@ -322,8 +322,11 @@ class CollarAndCombAdmin extends React.Component {
     addYelpReview = () => {
         const review = this.yelpInputRefer.current.value;
         const yelpReviews = this.state.yelpReviews;
-
-        yelpReviews.push(review);
+        const newEle = document.createElement('div');
+        newEle.innerHTML = review;
+        const title = review.slice(review.indexOf('>', review.indexOf('user_details'))+1, review.indexOf('<', review.indexOf('user_details')));
+        const value = newEle.firstChild.dataset.reviewId
+        yelpReviews.push({title, value});
         this.setState(yelpReviews);
     }
 
