@@ -3,6 +3,7 @@ import React from "react";
 import { withStyles } from "@material-ui/styles";
 import { PropTypes } from "prop-types";
 import { Grid, Typography } from "@material-ui/core";
+import {Instagram} from "@material-ui/icons";
 
 import MediaPlayer from "./MediaPlayer";
 import ScrollSlideShow from "./ScrollSlideShow";
@@ -31,15 +32,29 @@ const styles = () => ({
   slideShowContainer: {
     position: "relative",
     width: "100%",
-    height: "100%",
+    height: "calc(100% - 44px)",
     overflow: "hidden",
   },
   slideshowOutsideContainer: {
-      height: 'calc(100% - 300px)',
+      height: 'calc(100% - 216px)',
+  },
+  instaInfo: {
+    fontSize: 10,
+  },
+  instaTagName: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: 'rgb(196, 156, 94)',
+    lineHeight: '24px',
+    padding: '0 3px'
+  },
+  bold: {
+    fontWeight: 600
   },
   yelpReview: {
-    height: 300,
-    overflow: 'hidden'
+    height: 200,
+    overflow: 'hidden',
+    marginTop: -12
   },
   innerSlideshow: {
     position: "absolute",
@@ -50,7 +65,7 @@ const styles = () => ({
   },
   card: {
     maxWidth: 400,
-    margin: "10px 0",
+    margin: "2px 0",
     transition: "0.25s all",
   },
   mediaContainer: {
@@ -85,6 +100,7 @@ class CollarAndComb extends React.Component {
       spacing: "2",
       instaTags: [],
       yelpReviews: [],
+      yelpNumOfReviews: 0,
       instaAccount: "",
       headerText: "",
       currentColorChangeState: "",
@@ -185,11 +201,23 @@ class CollarAndComb extends React.Component {
               <Grid
                 item
                 container
-                xs={6}
-                direction='column'
+                xs={12}
+                direction='row'
                 justify='center'
                 className={classes.slideshowOutsideContainer}
               >
+                <Grid
+                  item
+                  container
+                  justify='flex-start'
+                  alignItems='center'
+                  xs={12}
+                  className={classes.instaInfo}
+                >
+                  <Instagram/>
+                  <span className={classes.instaTagName}>@collarandcomb</span>
+                  <span className={classes.bold}>79.1k</span> followers
+                </Grid>
                 <ScrollSlideShow
                   getNextCard={this.getNewData}
                   classes={classes}
@@ -200,30 +228,13 @@ class CollarAndComb extends React.Component {
                 />
               </Grid>
               <Grid
-                item
-                container
-                xs={6}
-                direction='column'
-                justify='center'
-                className={classes.slideshowOutsideContainer}
-              >
-                <ScrollSlideShow 
-                  getNextCard={this.state.customSlideshow.length !== 0 ? this.getNewCustomData : this.getNewData}
-                  classes={classes}
-                  startTimeout={2500}
-                  slideDelay={(this.state.transitionTime * 1000/2) * 2}
-                  transitionTime={this.state.transitionTime * 1000}
-                  cardStyles={this.state.styles.card}
-                  customSlide={this.state.customSlideshow.length !== 0}
-                />
-              </Grid>
-              <Grid
                 container
                 direction='column'
                 justify='flex-start'
                 className={classes.yelpReview}
               >
                 <YelpReviews
+                  yelpNumOfReviews={this.state.yelpNumOfReviews}
                   reviews={this.state.yelpReviews}
                 />
               </Grid>
