@@ -31,7 +31,7 @@ export default class SocialCard extends React.Component {
             >
                 <img src={imgURL} title='Instagram Card' alt='Instagram Card' className={classes.media}/>
                 <CardContent
-                    style={{paddingBottom: 10}}
+                    style={{padding: '0 5px'}}
                 >
                     <Typography>{text}</Typography>
                 </CardContent>

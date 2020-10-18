@@ -7,20 +7,51 @@ import TextInput from '../../forms/TextInput';
 import ContainedButtons from '../../forms/Button';
 
 export default function YelpReviews(props) {
+    let yelpName = '';
+    let yelpDate = '';
+    let yelpReview = '';
+
+    const addYelpReview = () => {
+        props.addYelpReview({title: yelpName, value: `${yelpDate}{summary}${yelpReview}`})
+    }
 
     return (
         <Grid container spacing={2} justify='center'>
             <Grid item xs={12}><Typography variant='h4'>Yelp Reviews</Typography></Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
                 <TextInput
-                    label='Add New Review'
+                    label='Number of reviews'
                     color='secondary'
                     name='media'
-                    refer={props.yelpRefer}
                     styles={props.classes.mediaInput}
+                    value={props.numOfReviews}
+                    onChange={(event) => {props.setNumOfReviews(event.currentTarget.value);}}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <TextInput
+                    label='Name of reviewer'
+                    color='secondary'
+                    name='media'
+                    styles={props.classes.mediaInput}
+                    onChange={(event) => {yelpName = event.currentTarget.value;}}
+                />
+                <TextInput
+                    label='Date of review'
+                    color='secondary'
+                    name='media'
+                    styles={props.classes.mediaInput}
+                    onChange={(event) => {yelpDate = event.currentTarget.value;}}
+                />
+                <TextInput
+                    label='Add Review'
+                    color='secondary'
+                    name='media'
+                    styles={props.classes.mediaInput}
+                    onChange={(event) => {yelpReview = event.currentTarget.value;}}
                 />
                 <ContainedButtons
-                    onClick={props.addYelpReview}
+                    onClick={addYelpReview}
                     name='mediaButton'
                     classes={props.classes.button}
                 >

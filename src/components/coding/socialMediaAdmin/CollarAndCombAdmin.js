@@ -129,6 +129,7 @@ class CollarAndCombAdmin extends React.Component {
             mediaDisplay: '',
             customSlideshow: [],
             showCustomSlideshow: false,
+            yelpNumOfReviews: 0,
             yelpReviews: [],
             backgroundImageName: '',
             styles: {
@@ -151,7 +152,6 @@ class CollarAndCombAdmin extends React.Component {
         };
 
         this.newInstaTagsRefer = React.createRef();
-        this.yelpInputRefer = React.createRef();
 
         const ID = envConfig.s3ID;
         const SECRET = envConfig.s3Secret;
@@ -319,15 +319,15 @@ class CollarAndCombAdmin extends React.Component {
         this.setState({styles});
     }
 
-    addYelpReview = () => {
-        const review = this.yelpInputRefer.current.value;
+    addYelpReview = (review) => {
         const yelpReviews = this.state.yelpReviews;
-        const newEle = document.createElement('div');
-        newEle.innerHTML = review;
-        const title = review.slice(review.indexOf('>', review.indexOf('user_details'))+1, review.indexOf('<', review.indexOf('user_details')));
-        const value = newEle.firstChild.dataset.reviewId
-        yelpReviews.push({title, value});
+        
+        yelpReviews.push(review);
         this.setState(yelpReviews);
+    }
+
+    setNumOfReviews = (num) => {
+        this.setState({yelpNumOfReviews: num});
     }
 
     removeYelpReview = (index) => {
@@ -418,9 +418,10 @@ class CollarAndCombAdmin extends React.Component {
                     <Grid item xs={12}>
                         <YelpReviews
                             classes={classes}
+                            setNumOfReviews={this.setNumOfReviews}
+                            numOfReviews={this.state.yelpNumOfReviews}
                             addYelpReview={this.addYelpReview}
                             removeYelpReview={this.removeYelpReview}
-                            yelpRefer={this.yelpInputRefer}
                             reviews={this.state.yelpReviews}
                         />
                     </Grid>

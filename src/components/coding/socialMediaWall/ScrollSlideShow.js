@@ -9,8 +9,9 @@ export default class SlideShow extends React.Component {
     
     constructor(props) {
         super(props);
-        const slideHeight = this.props.customSlide ? 100 : 350;
-        const numOfSlides = Math.ceil(window.innerHeight /slideHeight) + 1;
+        // const slideHeight = this.props.customSlide ? 100 : 350;
+        // const numOfSlides = Math.ceil(window.innerHeight /slideHeight) + 1;
+        const numOfSlides = 2;
         const slides = []
 
         for(var i = 0; i < numOfSlides; i++){
