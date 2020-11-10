@@ -8,7 +8,7 @@
     "@material-ui/lab": "^4.0.0-alpha.44",
     "aws": "0.0.3-2",
     "aws-sdk": "^2.665.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "react": "^16.13.0",
     "react-color": "^2.18.0",
     "react-dom": "^16.13.0",
