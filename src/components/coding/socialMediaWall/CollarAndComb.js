@@ -233,10 +233,12 @@ class CollarAndComb extends React.Component {
                 justify='flex-start'
                 className={classes.yelpReview}
               >
-                <YelpReviews
-                  yelpNumOfReviews={this.state.yelpNumOfReviews}
-                  reviews={this.state.yelpReviews}
-                />
+                {this.state.yelpReviews.length > 0 && (
+                  <YelpReviews
+                    yelpNumOfReviews={this.state.yelpNumOfReviews}
+                    reviews={this.state.yelpReviews}
+                  />
+                )}
               </Grid>
             </Grid>,
           ];
@@ -307,11 +309,13 @@ class CollarAndComb extends React.Component {
               alignItems="center"
               justify="center"
             >
-              <MediaPlayer
-                media={this.state.media}
-                classes={classes}
-                outerRef={this.videoGridRef}
-              />
+              <div
+                  style={{
+                      backgroundImage: `url('${this.state.media.link}')`
+                  }}
+                  alt='special media'
+                  className={`${classes.imgMedia}`}
+              ></div>
             </Grid>
           ) : (
             ["leftMedia", "rightMedia"].map((media, index) => {
