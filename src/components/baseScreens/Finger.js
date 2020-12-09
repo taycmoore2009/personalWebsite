@@ -60,10 +60,8 @@ class Finger extends React.Component {
                     <Grid item sm={3}>
                         <h3>Online</h3>
                         <ul>
-                            <li>Toaster</li>
-                            <li>Parasel</li>
-                            <li>EverMello</li>
                             <li>JAD</li>
+                            <li>EverMello</li>
                             <li>PinkMochii</li>
                             <li>Raider</li>
                         </ul>
