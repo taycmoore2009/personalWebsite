@@ -17,8 +17,57 @@ class Finger extends React.Component {
 
         return (
             <Grid container ref={refer}>
-                <Grid item md={12} className={classes.stretch}>
-                    I love hiking, dogs, tourturing my friends St.John, Toaster, and Joe, and long walks on the beach.
+                <Grid item container md={12} className={classes.stretch}>
+                    <Grid item sm={12}>
+                        <h2>Quick Background</h2>
+                        <p>I grew up in Maryland and attended college there. At a young age I developed a love of traveling and new experiences. This was fostered by my parents taking me camping every chance they had. I never grew up with money, but that didn't stop me from seeing as much as possible. In college I worked for an event botique. This helped me to fuel my love of travel by sending me to events around the world. Some noteable events were the Nike footbal combine and under amrour marathons. This also exposed me to my current work, websites. I started building website for OzTech Media in 2012, and I've never stopped. My expertise eventually lead me to Texas to work for Kibo. I made a ton of friends while there that I still keep in contact with. I also adopted the two most important things in my life, Roxie and Apollo. At some point Chrome River reached out to me and offered me a job in Los Angeles. I accepted and now I'm here. I spend my weekdays working, walking, and play video games with my firends. On the weekend I feed my curiosity by exploring as much as possible.</p>
+                    </Grid>
+                    <Grid item sm={12}>
+                        <h2>Friends List</h2>
+                    </Grid>
+                    <Grid item sm={3}>
+                        <h3>Maryland</h3>
+                        <ul>
+                            <li>Scott</li>
+                            <li>Justin</li>
+                            <li>Maddie</li>
+                            <li>Steph</li>
+                            <li>Annika</li>
+                            <li>Andrew</li>
+                            <li>Tim</li>
+                        </ul>
+                    </Grid>
+                    <Grid item sm={3}>
+                        <h3>Texas</h3>
+                        <ul>
+                            <li>Chris</li>
+                            <li>Ben</li>
+                            <li>Evelyn</li>
+                            <li>Jim</li>
+                            <li>Brandtley</li>
+                            <li>Jason</li>
+                        </ul>
+                    </Grid>
+                    <Grid item sm={3}>
+                        <h3>Los Angeles</h3>
+                        <ul>
+                            <li>Paul</li>
+                            <li>Joel</li>
+                            <li>Shiloh</li>
+                            <li>Cyn</li>
+                        </ul>
+                    </Grid>
+                    <Grid item sm={3}>
+                        <h3>Online</h3>
+                        <ul>
+                            <li>Toaster</li>
+                            <li>Parasel</li>
+                            <li>EverMello</li>
+                            <li>JAD</li>
+                            <li>PinkMochii</li>
+                            <li>Raider</li>
+                        </ul>
+                    </Grid>
                 </Grid>
             </Grid>
         );
