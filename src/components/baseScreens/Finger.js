@@ -18,7 +18,7 @@ class Finger extends React.Component {
         return (
             <Grid container ref={refer}>
                 <Grid item md={12} className={classes.stretch}>
-                    Contact Info Here
+                    I love hiking, dogs, tourturing my friends St.John, Toaster, and Joe, and long walks on the beach.
                 </Grid>
             </Grid>
         );
