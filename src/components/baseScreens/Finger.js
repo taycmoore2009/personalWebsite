@@ -31,7 +31,6 @@ class Finger extends React.Component {
                             <li>Scott</li>
                             <li>Justin</li>
                             <li>Maddie</li>
-                            <li>Steph</li>
                             <li>Annika</li>
                             <li>Andrew</li>
                             <li>Tim</li>
