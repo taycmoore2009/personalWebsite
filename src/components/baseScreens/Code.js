@@ -6,9 +6,10 @@ import { Grid } from '@material-ui/core';
 
 import BinaryTree from '../coding/BinaryTree';
 import NewsFeed from '../coding/NewsFeed';
-import SocialMediaWall from '../coding/SocialMediaWall'
-import SocialWallAuth from '../coding/socialMediaAdmin/auth'
-import VideoCapture from '../coding/VideoCapture'
+import SocialMediaWall from '../coding/SocialMediaWall';
+import SocialWallAuth from '../coding/socialMediaAdmin/auth';
+import VideoCapture from '../coding/VideoCapture';
+import OWFriendTracking from '../coding/OWFriendTracking';
 import { BrowserRouter as Route, Switch } from 'react-router-dom';
 
 const styles = () => ({
@@ -38,6 +39,9 @@ class Code extends React.Component {
                 </Route>
                 <Route path='/code/videocapture'>
                     <VideoCapture/>
+                </Route>
+                <Route path='/code/OWFriendTracking'>
+                    <OWFriendTracking/>
                 </Route>
                 <Route path='/code'>
                     Code
