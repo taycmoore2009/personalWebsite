@@ -37,6 +37,9 @@ const userNames = [
     }, {
         name: 'APlS%20I3EE',
         color: '0AF'
+    }, {
+        name: 'TayTheYucky',
+        color: '0AF'
     }
 ]
 
@@ -143,8 +146,14 @@ class OWFriendTracking extends React.Component {
                 return response.json();
             })
             .then(users => {
+                const groupUsers = _.groupBy(users, 'name');
+                userNames.forEach(user => {
+                    if(!groupUsers[user.name]) {
+                        groupUsers[user.name] = {name: user.name};
+                    }
+                });
                 this.setState({
-                    users: _.groupBy(users, 'name'),
+                    users: groupUsers,
                     loading: false
                 });
             });
@@ -180,9 +189,10 @@ class OWFriendTracking extends React.Component {
     onFetchUsers = () => {
         const promises = [];
         this.setState({loading: true});
-
+        console.log(this.state.users);
         this.fetchNewStats().then(users => {
             users.forEach(user => {
+                console.log(user);
                 const currentStats = this.state.users[user.name][this.state.users[user.name].length - 1];
 
                 const data = {
@@ -194,10 +204,13 @@ class OWFriendTracking extends React.Component {
                     data[rating.role === 'damage' ? 'dps' : rating.role] = rating.level;
                 });
 
+                console.log(currentStats)
+                console.log(data);
                 if (
-                    currentStats.dps !== user.dps ||
-                    currentStats.support !== user.support ||
-                    currentStats.tank !== user.tank
+                    !currentStats ||
+                    currentStats.dps !== data.dps ||
+                    currentStats.support !== data.support ||
+                    currentStats.tank !== data.tank
                 ) {
                     promises.push(fetch('https://dxk3dp2ts2.execute-api.us-east-2.amazonaws.com/personal/OWTracker', {
                         body: JSON.stringify(data),
@@ -228,6 +241,9 @@ class OWFriendTracking extends React.Component {
     generateDataPoints = (stat) => {
         const lines = [];
         for(var key in this.state.users) {
+            if(!this.state.users[key].length) {
+                break;
+            }
             const name = this.state.users[key][0].name;
             const userPoints = [];
             const numOfPoints = this.state.users[key].length;
@@ -303,6 +319,17 @@ class OWFriendTracking extends React.Component {
                                                 <li key={rating.role} className={classes.rankingItem}>
                                                     <span className={classes.roleSpan}><img className={classes.rankingImg} src={rating.roleIcon} alt='role icon'/> {rating.role}</span>
                                                     <span className={classes.rankSpan}><img className={classes.rankingImg} src={rating.rankIcon} alt='rank icon'/> {rating.level}</span>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <ul className={classes.rankings}>
+                                        {this.state.users[user.name].map(rating => {
+                                            return (
+                                                <li key={rating.created_at} className={classes.rankingItem}>
+                                                    <span className={classes.rankSpan}>Tank: {rating.tank} DPS: {rating.dps} Support: {rating.support}</span>
                                                 </li>
                                             );
                                         })}
