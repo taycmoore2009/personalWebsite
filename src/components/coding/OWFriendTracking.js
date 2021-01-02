@@ -189,10 +189,8 @@ class OWFriendTracking extends React.Component {
     onFetchUsers = () => {
         const promises = [];
         this.setState({loading: true});
-        console.log(this.state.users);
         this.fetchNewStats().then(users => {
             users.forEach(user => {
-                console.log(user);
                 const currentStats = this.state.users[user.name][this.state.users[user.name].length - 1];
 
                 const data = {
@@ -204,8 +202,6 @@ class OWFriendTracking extends React.Component {
                     data[rating.role === 'damage' ? 'dps' : rating.role] = rating.level;
                 });
 
-                console.log(currentStats)
-                console.log(data);
                 if (
                     !currentStats ||
                     currentStats.dps !== data.dps ||
