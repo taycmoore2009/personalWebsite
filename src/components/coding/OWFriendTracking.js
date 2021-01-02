@@ -6,6 +6,9 @@ import _ from 'lodash'
 import { 
     Grid,
     Chip,
+    Card,
+    CardContent,
+    CardMedia,
     Backdrop,
     CircularProgress,
     Dialog,
@@ -16,23 +19,24 @@ import {
     DialogTitle
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
+import { SportsRugbySharp } from '@material-ui/icons';
 
 const userNames = [
     {
         name: 'TayTheMighty',
-        color: Math.floor(Math.random()*16777215).toString(16)
+        color: 'A0F'
     }, {
         name: 'PearlRadiant',
-        color: Math.floor(Math.random()*16777215).toString(16)
+        color: 'eae0c8'
     }, {
         name: 'pinkiemochii',
-        color: Math.floor(Math.random()*16777215).toString(16)
+        color: 'ff83ef'
     }, {
         name: 'raider741',
-        color: Math.floor(Math.random()*16777215).toString(16)
+        color: 'F00'
     }, {
         name: 'APlS%20I3EE',
-        color: Math.floor(Math.random()*16777215).toString(16)
+        color: '0AF'
     }
 ]
 
@@ -46,12 +50,77 @@ const styles = {
     },
     backdrop: {
         color: '#fff',
+        zIndex: 1
     },
     chip: {
         margin: '5px',
     },
-    li: {
-        listStyle: 'none'
+    playerCard: {
+        background: 'rgba(221, 221, 221, .7)',
+        margin: '20px',
+        maxWidth: 600
+    },
+    header: {
+        background: 'rgba(13, 13, 154, .5)',
+        color: '#FFF',
+        display: 'flex',
+        alignItems: 'center'
+    },
+    playerIcon: {
+        width: 150,
+        height: 150
+    },
+    playerName: {
+        fontWeight: 600,
+        fontSize: 24,
+        textTransform: 'uppercase',
+        fontStyle: 'italic',
+        fontFamily: 'sans-serif',
+        margin: '0 10px'
+    },
+    playerLevel: {
+        fontSize: 12
+    },
+    levelIcon: {
+        height: 12
+    },
+    endorsementIcon: {
+        width: 120,
+        height: 120
+    },
+    endorsementLvl: {
+        fontSize: '36px',
+        display: 'block',
+        position: 'absolute',
+        top: 34,
+        left: 50,
+    },
+    rankings: {
+        color: '#333',
+        fontSize: 22,
+        padding: '0',
+    },
+    rankingItem: {
+        listStyle: 'none',
+        background: 'rgba(200, 200, 200, .5)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        maxWidth: 300,
+        padding: 5,
+        margin: '5px 20px'
+    },
+    roleImg: {
+        height: '14px'
+    },
+    rankingImg: {
+        height: '22px'
+    },
+    roleSpan: {
+        fontSize: 12,
+        textTransform: 'uppercase'
+    },
+    rankSpan: {
+
     }
 };
 
@@ -59,7 +128,8 @@ class OWFriendTracking extends React.Component {
     state = {
         users: [],
         currentUser: {},
-        loading: false
+        loading: false,
+        showDialog: false
     }
 
     componentDidMount = () => {
@@ -113,7 +183,7 @@ class OWFriendTracking extends React.Component {
 
         this.fetchNewStats().then(users => {
             users.forEach(user => {
-                const currentStats = this.state.users[user.name];
+                const currentStats = this.state.users[user.name][this.state.users[user.name].length - 1];
 
                 const data = {
                     name: user.name,
@@ -178,11 +248,6 @@ class OWFriendTracking extends React.Component {
             ))
         }
 
-        /**
-         * 500 * index * (1/numofpoints)
-         * 500 * 2 * .3
-         */
-
         return [lines]
     }
 
@@ -196,7 +261,7 @@ class OWFriendTracking extends React.Component {
 
         return (
             <Grid container justify="center" className={classes.root}>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                     <button onClick={this.onFetchUsers}>Fetch Users</button>
                     <h3>Users</h3>
                     <Grid container justify="flex-start">
@@ -206,6 +271,7 @@ class OWFriendTracking extends React.Component {
                                     onClick={() => {
                                         this.showUser(user.name);
                                     }}
+                                    className={classes.chip}
                                     key={user.name}
                                     style={{backgroundColor: `#${user.color}`}}
                                     label={user.name.replace('%20', ' ')}
@@ -214,21 +280,42 @@ class OWFriendTracking extends React.Component {
                         })}
                     </Grid>
                     {user.name && (
-                            <div key={user.name}>
-                                <span><img src={user.icon} alt='userIcon'/></span><br/>
-                                <span>Name: {user.name}</span><br/>
-                                <span>Rating overall: <img height='30px' src={user.ratingIcon} alt='ranking'/>{user.rating}</span><br/>
-                                {user.ratings.map(rating => {
-                                    return (<div key={rating.role}><img height='30px' src={rating.roleIcon} alt='role'/>{rating.role}: <img height='30px' src={rating.rankIcon} alt='ranking'/>{rating.level}</div>);
-                                })}
-                            </div>
+                            <Grid container justify='flex-start' className={classes.playerCard}>
+                                {/* Top portion */}
+                                <Grid className={classes.header} item xs={12}>
+                                    <img src={user.icon} alt='player icon' className={classes.playerIcon}/>
+                                    <span className={classes.playerName}>
+                                        {user.name}<br/>
+                                        <span className={classes.playerLevel}>
+                                            lvl: {user.level} - Prestige: {user.prestige}
+                                        </span>
+                                    </span>
+                                    <span style={{position: 'relative'}}>
+                                        <img src={user.endorsementIcon} alt='endorsement level' className={classes.endorsementIcon}/>
+                                        <span className={classes.endorsementLvl}>{user.endorsement}</span>
+                                    </span>
+                                </Grid>
+                                {/* bottom Portion */}
+                                <Grid item xs={12}>
+                                    <ul className={classes.rankings}>
+                                        {user.ratings.map(rating => {
+                                            return (
+                                                <li key={rating.role} className={classes.rankingItem}>
+                                                    <span className={classes.roleSpan}><img className={classes.rankingImg} src={rating.roleIcon} alt='role icon'/> {rating.role}</span>
+                                                    <span className={classes.rankSpan}><img className={classes.rankingImg} src={rating.rankIcon} alt='rank icon'/> {rating.level}</span>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </Grid>
+                            </Grid>
                         )
                     }
                 </Grid>
                 <h3>Charts</h3>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                     <h4>Oerall</h4>
-                    <svg viewBox="0 0 550 550" className="chart" style={{minWidth: 500, margin: '5px 0 30px 0', background: '#FFF'}}>
+                    <svg viewBox="0 0 550 550" className="chart" style={{maxWidth: 600, margin: '5px 0 30px 0', background: '#FFF'}}>
                         <g className="grid x-grid">
                             <line stroke="#0F0" x1="50" y1="500" x2="550" y2="500"></line>
                         </g>
@@ -257,7 +344,7 @@ class OWFriendTracking extends React.Component {
                         })}
                     </svg>
                 </Grid>
-                <Grid item sm={12} md={4}>
+                <Grid item xs={12} md={4}>
                     <h4>Tank</h4>
                     <svg viewBox="0 0 550 550" className="chart" style={{minWidth: 500, margin: '5px 0 30px 0', background: '#FFF'}}>
                         <g className="grid x-grid">
@@ -288,7 +375,7 @@ class OWFriendTracking extends React.Component {
                         })}
                     </svg>
                 </Grid>
-                <Grid item sm={12} md={4}>
+                <Grid item xs={12} md={4}>
                     <h4>DPS</h4>
                     <svg viewBox="0 0 550 550" className="chart" style={{minWidth: 500, margin: '5px 0 30px 0', background: '#FFF'}}>
                         <g className="grid x-grid">
@@ -319,7 +406,7 @@ class OWFriendTracking extends React.Component {
                         })}
                     </svg>
                 </Grid>
-                <Grid item sm={12} md={4}>
+                <Grid item xs={12} md={4}>
                     <h4>Support</h4>
                     <svg viewBox="0 0 550 550" className="chart" style={{minWidth: 500, margin: '5px 0 30px 0', background: '#FFF'}}>
                         <g className="grid x-grid">
