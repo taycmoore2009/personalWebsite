@@ -98,8 +98,9 @@ class YelpReviews extends React.Component {
 
     render() {
         const classes = this.props.classes;
-        const date = this.state.currentSlide.value.split('{summary}')[0];
-        const summary = this.state.currentSlide.value.split('{summary}')[1].replaceAll("\n", "<br/>");
+        const valueSplit = this.state.currentSlide.value.split('{summar}');
+        const date = valueSplit.length ? valueSplit[0] : '';
+        const summary = valueSplit.length === 2 ? valueSplit[1].replaceAll("\n", "<br/>") : '';
 
         return (
             <Grid
