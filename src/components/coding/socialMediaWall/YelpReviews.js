@@ -70,8 +70,12 @@ class YelpReviews extends React.Component {
             opacity: 1
         }
         this.layoutRef = React.createRef();
+    }
+
+    componentDidMount = () => {
         this.startTimer();
     }
+    
     startTimer = () => {
         const slideCounter = this.state.slides.length;
         const slides = this.state.slides;

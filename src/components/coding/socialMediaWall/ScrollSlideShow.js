@@ -24,12 +24,13 @@ export default class SlideShow extends React.Component {
             index: 0
         }
 
+        this.innerSlideshowRef = React.createRef();
+    }
+
+    componentDidMount = () => {
         setTimeout(() => {
             this.startTimer();
         }, this.props.slideDelay || 0);
-
-        this.innerSlideshowRef = React.createRef();
-        window.test = this.innerSlideshowRef;
     }
 
     startTimer = () => {
