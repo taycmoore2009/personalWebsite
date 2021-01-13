@@ -42,7 +42,6 @@ class Calendar extends React.Component {
 
         flickr.groups.pools.getPhotos({
             group_id: '14734920@N24',
-            per_page: 500,
         })
             .then(resp => {return resp.body.photos})
             .then(groupInfo => {
