@@ -20,11 +20,12 @@ const styles = {
         background: '#e3e9ff'
     },
     slideShow: {
-        height: 400
+        width: '413px',
+        height: 600,
+        padding: '10px 20px 10px 0px'
     },
     flickrImg: {
-        marginTop: 20,
-        height: 350,
+        height: 550,
         width: '100%',
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
@@ -61,12 +62,12 @@ class Calendar extends React.Component {
 
         return (
             <Grid container justify="flex-start" className={classes.root}>
-                <Grid item xs={6}>
+                <Grid item xs={8}>
                     <Grid item xs={12}>
                         <iframe
                             src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23e3e9ff&amp;ctz=America%2FLos_Angeles&amp;src=dGF5Y21vb3JlMjAwOUBnbWFpbC5jb20&amp;src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;src=c3RlcGhhbmllbC5nZXJ0c2NoQGdtYWlsLmNvbQ&amp;src=dGF5Lm1vb3JlQGVtYnVyc2UuY29t&amp;color=%23F6BF26&amp;color=%234285F4&amp;color=%23795548&amp;color=%237986CB&amp;showCalendars=0&amp;showTabs=0&amp;showPrint=0&amp;showDate=0&amp;showNav=0&amp;showTitle=0&amp;showTz=0"
                             style={{border: '0'}}
-                            width="650"
+                            width="860"
                             height="600"
                             frameBorder="0"
                             scrolling="no"
@@ -74,9 +75,8 @@ class Calendar extends React.Component {
                         ></iframe>
                     </Grid>
                 </Grid>
-                <Grid item container xs={6}>
-                    <Grid item xs={12} className={classes.slideShow}>
-                    <div className="slide-container">
+                <Grid item container xs={4}>
+                    <div className={`${classes.slideShow} slide-container`}>
                         <Fade
                             indicators={false}
                             arrows={false}
@@ -93,18 +93,6 @@ class Calendar extends React.Component {
                             })}
                         </Fade>
                     </div>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <iframe
-                            src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23e3e9ff&amp;ctz=America%2FLos_Angeles&amp;src=dGF5Y21vb3JlMjAwOUBnbWFpbC5jb20&amp;src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;src=c3RlcGhhbmllbC5nZXJ0c2NoQGdtYWlsLmNvbQ&amp;src=dGF5Lm1vb3JlQGVtYnVyc2UuY29t&amp;color=%23F6BF26&amp;color=%234285F4&amp;color=%23795548&amp;color=%237986CB&amp;showCalendars=0&amp;showTabs=0&amp;showPrint=0&amp;showDate=0&amp;showNav=0&amp;showTitle=0&amp;showTz=0&amp;mode=AGENDA"
-                            style={{borderWidth:0}}
-                            width="650"
-                            height="200"
-                            frameBorder="0"
-                            scrolling="no"
-                            title="Agenda"
-                        ></iframe>
-                    </Grid>
                 </Grid>
             </Grid>
         );
