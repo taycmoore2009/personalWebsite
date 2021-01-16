@@ -94,7 +94,7 @@ class Calendar extends React.Component {
                             })}
                         </Fade>
                     </div>
-                    <iframe src="https://calendar.google.com/calendar/embed?height=144&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=dGF5Y21vb3JlMjAwOUBnbWFpbC5jb20&amp;src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;src=c3RlcGhhbmllbC5nZXJ0c2NoQGdtYWlsLmNvbQ&amp;src=dGF5Lm1vb3JlQGVtYnVyc2UuY29t&amp;color=%23F6BF26&amp;color=%234285F4&amp;color=%23795548&amp;color=%237986CB&amp;showTitle=0&amp;showNav=0&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA" style="border-width:0" width="453" height="144" frameborder="0" scrolling="no"></iframe>
+                    <iframe title='agenda' src="https://calendar.google.com/calendar/embed?height=144&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=dGF5Y21vb3JlMjAwOUBnbWFpbC5jb20&amp;src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;src=c3RlcGhhbmllbC5nZXJ0c2NoQGdtYWlsLmNvbQ&amp;src=dGF5Lm1vb3JlQGVtYnVyc2UuY29t&amp;color=%23F6BF26&amp;color=%234285F4&amp;color=%23795548&amp;color=%237986CB&amp;showTitle=0&amp;showNav=0&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA" style={{borderWidth:0}} width="453" height="144" frameBorder="0" scrolling="no"></iframe>
                 </Grid>
             </Grid>
         );
