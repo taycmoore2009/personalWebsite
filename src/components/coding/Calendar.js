@@ -207,172 +207,182 @@ class Calendar extends React.Component {
         return JSON.parse(resp.body);
     }
 
+    generateTable = (dateArr, events) => {
+        const {classes} = this.props;
+        const counter = new Array(dateArr.length / 7).fill(undefined);
+
+        return (
+            <table className={classes.calendarContainer}>
+                <thead>
+                    <tr className={classes.calendarHeader}>
+                        <th>Sunday</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {counter.map((count, index) => {
+                        const multiplier = index * 7;
+                        let dayArr = [
+                            {
+                                date: dateArr[0 + multiplier],
+                            },
+                            {
+                                date: dateArr[1 + multiplier],
+                            },
+                            {
+                                date: dateArr[2 + multiplier],
+                            },
+                            {
+                                date: dateArr[3 + multiplier],
+                            },
+                            {
+                                date: dateArr[4 + multiplier],
+                            },
+                            {
+                                date: dateArr[5 + multiplier],
+                            },
+                            {
+                                date: dateArr[6 + multiplier],
+                            },
+                        ];
+
+                        dayArr = dayArr.map((day) => {
+                            const dayEvents = _.filter(events, (event) => {
+                                return event.start.dateTime.split('T')[0] === day.date.toISOString().split('T')[0];
+                            }).map((dayEvent) => {
+                                let time = dayEvent.start.dateTime.split('T')[1];
+                                if(time.split(':')[0] > 12) {
+                                    const timeTail = time.split(':')[1] == '00' ? 'pm': ':' + time.split(':')[1] + 'pm';
+                                    time = (time.split(':')[0] -12) + timeTail;
+                                } else {
+                                    const timeTail = time.split(':')[1] == '00' ? 'am': ':' + time.split(':')[1] + 'am';
+                                    time = Number(time.split(':')[0]) + timeTail;
+                                }
+                                return {
+                                    ...dayEvent,
+                                    startTime: time
+                                }
+                            });
+                            return {
+                                ...day,
+                                events: dayEvents.splice(0, 5)
+                            }
+                        });
+
+                        return this.generateDates(dayArr, index);
+                    })}
+                </tbody>
+            </table>
+        )
+    }
+    generateDates = (dayArr, index) => {
+        const {classes} = this.props;
+        const today = new Date();
+
+        return (
+            <tr key={`week ${index +1}`}>
+                <td 
+                    className={`${classes.calendarElement} ${dayArr[0].date.getDate() == today.getDate() && dayArr[0].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                >
+                    <span className={classes.dateTitle}>{dayArr[0].date.getDate()}</span>
+                    <ul className={classes.eventContainer}>
+                        {dayArr[0].events.map((event) => {
+                            return (
+                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                            )
+                        })}
+                    </ul>
+                </td>
+                <td 
+                    className={`${classes.calendarElement} ${dayArr[1].date.getDate() == today.getDate() && dayArr[1].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                >
+                    <span className={classes.dateTitle}>{dayArr[1].date.getDate()}</span>
+                    <ul className={classes.eventContainer}>
+                        {dayArr[1].events.map((event) => {
+                            return (
+                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                            )
+                        })}
+                    </ul>
+                </td>
+                <td 
+                    className={`${classes.calendarElement} ${dayArr[2].date.getDate() == today.getDate() && dayArr[2].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                >
+                    <span className={classes.dateTitle}>{dayArr[2].date.getDate()}</span>
+                    <ul className={classes.eventContainer}>
+                        {dayArr[2].events.map((event) => {
+                            return (
+                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                            )
+                        })}
+                    </ul>
+                </td>
+                <td 
+                    className={`${classes.calendarElement} ${dayArr[3].date.getDate() == today.getDate() && dayArr[3].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                >
+                    <span className={classes.dateTitle}>{dayArr[3].date.getDate()}</span>
+                    <ul className={classes.eventContainer}>
+                        {dayArr[3].events.map((event) => {
+                            return (
+                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                            )
+                        })}
+                    </ul>
+                </td>
+                <td 
+                    className={`${classes.calendarElement} ${dayArr[4].date.getDate() == today.getDate() && dayArr[4].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                >
+                    <span className={classes.dateTitle}>{dayArr[4].date.getDate()}</span>
+                    <ul className={classes.eventContainer}>
+                        {dayArr[4].events.map((event) => {
+                            return (
+                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                            )
+                        })}
+                    </ul>
+                </td>
+                <td 
+                    className={`${classes.calendarElement} ${dayArr[5].date.getDate() == today.getDate() && dayArr[5].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                >
+                    <span className={classes.dateTitle}>{dayArr[5].date.getDate()}</span>
+                    <ul className={classes.eventContainer}>
+                        {dayArr[5].events.map((event) => {
+                            return (
+                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                            )
+                        })}
+                    </ul>
+                </td>
+                <td 
+                    className={`${classes.calendarElement} ${dayArr[6].date.getDate() == today.getDate() && dayArr[6].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                >
+                    <span className={classes.dateTitle}>{dayArr[6].date.getDate()}</span>
+                    <ul className={classes.eventContainer}>
+                        {dayArr[6].events.map((event) => {
+                            return (
+                                <li key={event.id} className={classes.eventItem}>{event.summary || 'no summary'}</li>
+                            )
+                        })}
+                    </ul>
+                </td>
+            </tr>
+        )
+    }
+
     render = () => {
         const { classes } = this.props;
-        const {firstDate, lastDate, events, dateArr} = this.state;
-        const counter = new Array(dateArr.length / 7).fill(undefined);
-        const today = new Date();
-        console.log(this.state);
+        const {dateArr, events} = this.state;
 
         return (
             <Grid container justify="flex-start" className={classes.root}>
                 <Grid item xs={8}>
                     <Grid item xs={12}>
-                        {dateArr.length && (
-                            <table className={classes.calendarContainer}>
-                                <thead>
-                                    <tr className={classes.calendarHeader}>
-                                        <th>Sunday</th>
-                                        <th>Monday</th>
-                                        <th>Tuesday</th>
-                                        <th>Wednesday</th>
-                                        <th>Thursday</th>
-                                        <th>Friday</th>
-                                        <th>Saturday</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {counter.map((count, index) => {
-                                        const multiplier = index * 7;
-                                        let dayArr = [
-                                            {
-                                                date: dateArr[0 + multiplier],
-                                            },
-                                            {
-                                                date: dateArr[1 + multiplier],
-                                            },
-                                            {
-                                                date: dateArr[2 + multiplier],
-                                            },
-                                            {
-                                                date: dateArr[3 + multiplier],
-                                            },
-                                            {
-                                                date: dateArr[4 + multiplier],
-                                            },
-                                            {
-                                                date: dateArr[5 + multiplier],
-                                            },
-                                            {
-                                                date: dateArr[6 + multiplier],
-                                            },
-                                        ];
-
-                                        dayArr = dayArr.map((day) => {
-                                            const dayEvents = _.filter(events, (event) => {
-                                                return event.start.dateTime.split('T')[0] === day.date.toISOString().split('T')[0];
-                                            }).map((dayEvent) => {
-                                                let time = dayEvent.start.dateTime.split('T')[1];
-                                                if(time.split(':')[0] > 12) {
-                                                    const timeTail = time.split(':')[1] == '00' ? 'pm': ':' + time.split(':')[1] + 'pm';
-                                                    time = (time.split(':')[0] -12) + timeTail;
-                                                } else {
-                                                    const timeTail = time.split(':')[1] == '00' ? 'am': ':' + time.split(':')[1] + 'am';
-                                                    time = Number(time.split(':')[0]) + timeTail;
-                                                }
-                                                return {
-                                                    ...dayEvent,
-                                                    startTime: time
-                                                }
-                                            });
-                                            return {
-                                                ...day,
-                                                events: dayEvents.splice(0, 5)
-                                            }
-                                        });
-
-                                        return (
-                                            <tr key={`week ${index +1}`}>
-                                                <td 
-                                                    className={`${classes.calendarElement} ${dayArr[0].date.getDate() == today.getDate() && dayArr[0].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
-                                                >
-                                                    <span className={classes.dateTitle}>{dayArr[0].date.getDate()}</span>
-                                                    <ul className={classes.eventContainer}>
-                                                        {dayArr[0].events.map((event) => {
-                                                            return (
-                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                </td>
-                                                <td 
-                                                    className={`${classes.calendarElement} ${dayArr[1].date.getDate() == today.getDate() && dayArr[1].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
-                                                >
-                                                    <span className={classes.dateTitle}>{dayArr[1].date.getDate()}</span>
-                                                    <ul className={classes.eventContainer}>
-                                                        {dayArr[1].events.map((event) => {
-                                                            return (
-                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                </td>
-                                                <td 
-                                                    className={`${classes.calendarElement} ${dayArr[2].date.getDate() == today.getDate() && dayArr[2].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
-                                                >
-                                                    <span className={classes.dateTitle}>{dayArr[2].date.getDate()}</span>
-                                                    <ul className={classes.eventContainer}>
-                                                        {dayArr[2].events.map((event) => {
-                                                            return (
-                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                </td>
-                                                <td 
-                                                    className={`${classes.calendarElement} ${dayArr[3].date.getDate() == today.getDate() && dayArr[3].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
-                                                >
-                                                    <span className={classes.dateTitle}>{dayArr[3].date.getDate()}</span>
-                                                    <ul className={classes.eventContainer}>
-                                                        {dayArr[3].events.map((event) => {
-                                                            return (
-                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                </td>
-                                                <td 
-                                                    className={`${classes.calendarElement} ${dayArr[4].date.getDate() == today.getDate() && dayArr[4].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
-                                                >
-                                                    <span className={classes.dateTitle}>{dayArr[4].date.getDate()}</span>
-                                                    <ul className={classes.eventContainer}>
-                                                        {dayArr[4].events.map((event) => {
-                                                            return (
-                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                </td>
-                                                <td 
-                                                    className={`${classes.calendarElement} ${dayArr[5].date.getDate() == today.getDate() && dayArr[5].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
-                                                >
-                                                    <span className={classes.dateTitle}>{dayArr[5].date.getDate()}</span>
-                                                    <ul className={classes.eventContainer}>
-                                                        {dayArr[5].events.map((event) => {
-                                                            return (
-                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                </td>
-                                                <td 
-                                                    className={`${classes.calendarElement} ${dayArr[6].date.getDate() == today.getDate() && dayArr[6].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
-                                                >
-                                                    <span className={classes.dateTitle}>{dayArr[6].date.getDate()}</span>
-                                                    <ul className={classes.eventContainer}>
-                                                        {dayArr[6].events.map((event) => {
-                                                            return (
-                                                                <li key={event.id} className={classes.eventItem}>{event.summary || 'no summary'}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        )}
+                        {dateArr.length && this.generateTable(dateArr, events)}
                     </Grid>
                 </Grid>
                 <Grid item container xs={4}>
