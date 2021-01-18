@@ -1,5 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
+import _ from 'lodash';
 
 import { 
     Grid,
@@ -10,6 +11,11 @@ import Flickr from 'flickr-sdk'
 import { Fade } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 
+import envConfig from '../../envConfig'
+import calendarConfig from './calendar/calendarConfig';
+
+const gapi = window.gapi;
+
 const styles = {
     root: {
         display: 'flex',
@@ -17,11 +23,11 @@ const styles = {
         flexWrap: 'wrap',
         listStyle: 'none',
         margin: 0,
-        background: '#e3e9ff'
+        background: '#000'
     },
     slideShow: {
         width: '413px',
-        height: 600,
+        height: '100%',
         padding: '10px 20px 10px 0px'
     },
     flickrImg: {
@@ -31,11 +37,51 @@ const styles = {
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center'
     },
+    calendarContainer: {
+        width: '896px',
+        height: '100%',
+        margin: '5px auto',
+        borderCollapse: 'collapse',
+        color: '#FFF',
+        fontSize: 12,
+    },
+    calendarElement: {
+        height: 115,
+        width: 128,
+        verticalAlign: 'top',
+        border: '1px solid #8671ce',
+        overflow: 'hidden',
+    },
+    dateTitle: {
+        color: '#8671ce',
+        textAlign: 'right',
+        width: '100%',
+        display: 'inline-block'
+    },
+    currentDate: {
+        border: '2px solid #FFF',
+    },
+    eventContainer: {
+        padding: 2,
+        margin: 0,
+        width: 122
+    },
+    eventItem: {
+        listStyle: 'none',
+        width: '126px',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'hidden'
+    },
 };
 
 class Calendar extends React.Component {
     state = {
-        photos: []
+        photos: [],
+        firstDate: '',
+        lastDate: '',
+        events: [],
+        dateArr: []
     }
     
     componentDidMount = () => {
@@ -56,24 +102,277 @@ class Calendar extends React.Component {
                     this.setState({photos});
                 }
             });
+        gapi.load('client', this.startCalendar);
+    }
+
+    startCalendar = () => {
+        gapi.client.init({
+            apiKey: envConfig.gaKey,
+            clientId: envConfig.gaClientID,
+            discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+            scope: "https://www.googleapis.com/auth/calendar.readonly"
+        }).then(() => {
+            // Listen for sign-in state changes.
+            gapi.auth2.getAuthInstance().isSignedIn.listen(this.loadCalendars);
+    
+            // Handle the initial sign-in state.
+            this.calendarSignIn(gapi.auth2.getAuthInstance().isSignedIn.get());
+        }, function(error) {
+            console.log(error);
+        });
+    }
+
+    calendarSignIn = (signinStatus) => {
+        if (!signinStatus) {
+            gapi.auth2.getAuthInstance().signIn();
+        } else {
+            this.loadCalendars();
+        }
+    }
+
+    loadCalendars = () => {
+        const firstDate = this.firstDate(); //`${date.getFullYear()}-${date.getMonth() +1}-1T00:00:00Z`
+        const lastDate = this.lastDate(); //`${date.getFullYear() + (date.getMonth() === 11 ? 1 : 0)}-${date.getMonth() === 11 ? 1 : date.getMonth() + 2}-1T00:00:00Z`;
+
+        gapi.client.calendar.calendarList.list()
+            .then(this.parseApi)
+            .then(data => {
+                const promiseArr = [];
+                
+                data.items.forEach(calendar => {
+                    promiseArr.push(gapi.client.calendar.events.list({
+                        calendarId: calendar.id,
+                        timeMin: `${firstDate}Z`,
+                        timeMax: `${lastDate}Z`,
+                        showDeleted: false,
+                        singleEvents: true
+                    }).then(this.parseApi))
+                });
+
+                Promise.all(promiseArr).then(calendarArr => {
+                    const dateArr = this.createDateArray(new Date(firstDate), new Date(lastDate));
+
+                    this.setState({
+                        events: this.parseList(calendarArr),
+                        firstDate,
+                        lastDate,
+                        dateArr
+                    });
+                })
+            });
+    }
+
+    firstDate = () => {
+        const date = new Date();
+        const numOfDaysToSubtract = (new Date(`${date.getFullYear()}-${('0' + (date.getMonth()+1)).slice(-2)}-01T00:00:00-08:00`)).getDay();
+
+        date.setDate(1 - numOfDaysToSubtract);
+
+        return `${date.getFullYear()}-${('0' + (date.getMonth()+1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}T00:00:00`
+    }
+
+    lastDate = () => {
+        const date = new Date();
+        const numOfDaysInMonth = calendarConfig.daysInMonths[date.getMonth()]
+        const numOfDaysToAdd = (new Date(`${date.getFullYear()}-${('0' + (date.getMonth()+1)).slice(-2)}-${numOfDaysInMonth}T00:00:00-08:00`)).getDay();
+
+        date.setDate(numOfDaysInMonth + 7 - numOfDaysToAdd);
+
+        return `${date.getFullYear()}-${('0' + (date.getMonth()+1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}T00:00:00`
+    }
+
+    createDateArray = (firstDate, lastDate) => {
+        const dateArr = [];
+        let currentDate = new Date(firstDate.toISOString());
+
+        while(firstDate.toISOString() !== lastDate.toISOString()) {
+            dateArr.push(currentDate);
+            firstDate.setDate(firstDate.getDate() + 1);
+            currentDate = new Date(firstDate.toISOString());
+        }
+        return dateArr;
+    }
+
+    parseList = (calendarArr) => {
+        const list = [];
+        calendarArr.forEach(calendar => {
+            calendar.items.forEach(event => {
+                list.push({user: calendar.summary, ...event});
+            });
+        });
+        return _.sortBy(list, 'start.dateTime');
+    }
+
+    parseApi = (resp) => {
+        return JSON.parse(resp.body);
     }
 
     render = () => {
         const { classes } = this.props;
+        const {firstDate, lastDate, events, dateArr} = this.state;
+        const counter = new Array(dateArr.length / 7).fill(undefined);
+        const today = new Date();
+        console.log(this.state);
 
         return (
             <Grid container justify="flex-start" className={classes.root}>
                 <Grid item xs={8}>
                     <Grid item xs={12}>
-                        <iframe
-                            src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23e3e9ff&amp;ctz=America%2FLos_Angeles&amp;src=dGF5Y21vb3JlMjAwOUBnbWFpbC5jb20&amp;src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;src=c3RlcGhhbmllbC5nZXJ0c2NoQGdtYWlsLmNvbQ&amp;src=dGF5Lm1vb3JlQGVtYnVyc2UuY29t&amp;color=%23F6BF26&amp;color=%234285F4&amp;color=%23795548&amp;color=%237986CB&amp;showCalendars=0&amp;showTabs=0&amp;showPrint=0&amp;showDate=0&amp;showNav=0&amp;showTitle=0&amp;showTz=0"
-                            style={{border: '0'}}
-                            width="860"
-                            height="764"
-                            frameBorder="0"
-                            scrolling="no"
-                            title="Month Calendar"
-                        ></iframe>
+                        {dateArr.length && (
+                            <table className={classes.calendarContainer}>
+                                <thead>
+                                    <tr className={classes.calendarHeader}>
+                                        <th>Sunday</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                        <th>Saturday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {counter.map((count, index) => {
+                                        const multiplier = index * 7;
+                                        let dayArr = [
+                                            {
+                                                date: dateArr[0 + multiplier],
+                                            },
+                                            {
+                                                date: dateArr[1 + multiplier],
+                                            },
+                                            {
+                                                date: dateArr[2 + multiplier],
+                                            },
+                                            {
+                                                date: dateArr[3 + multiplier],
+                                            },
+                                            {
+                                                date: dateArr[4 + multiplier],
+                                            },
+                                            {
+                                                date: dateArr[5 + multiplier],
+                                            },
+                                            {
+                                                date: dateArr[6 + multiplier],
+                                            },
+                                        ];
+
+                                        dayArr = dayArr.map((day) => {
+                                            const dayEvents = _.filter(events, (event) => {
+                                                return event.start.dateTime.split('T')[0] === day.date.toISOString().split('T')[0];
+                                            }).map((dayEvent) => {
+                                                let time = dayEvent.start.dateTime.split('T')[1];
+                                                if(time.split(':')[0] > 12) {
+                                                    const timeTail = time.split(':')[1] == '00' ? 'pm': ':' + time.split(':')[1] + 'pm';
+                                                    time = (time.split(':')[0] -12) + timeTail;
+                                                } else {
+                                                    const timeTail = time.split(':')[1] == '00' ? 'am': ':' + time.split(':')[1] + 'am';
+                                                    time = Number(time.split(':')[0]) + timeTail;
+                                                }
+                                                return {
+                                                    ...dayEvent,
+                                                    startTime: time
+                                                }
+                                            });
+                                            return {
+                                                ...day,
+                                                events: dayEvents.splice(0, 5)
+                                            }
+                                        });
+
+                                        return (
+                                            <tr key={`week ${index +1}`}>
+                                                <td 
+                                                    className={`${classes.calendarElement} ${dayArr[0].date.getDate() == today.getDate() && dayArr[0].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                                                >
+                                                    <span className={classes.dateTitle}>{dayArr[0].date.getDate()}</span>
+                                                    <ul className={classes.eventContainer}>
+                                                        {dayArr[0].events.map((event) => {
+                                                            return (
+                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                                <td 
+                                                    className={`${classes.calendarElement} ${dayArr[1].date.getDate() == today.getDate() && dayArr[1].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                                                >
+                                                    <span className={classes.dateTitle}>{dayArr[1].date.getDate()}</span>
+                                                    <ul className={classes.eventContainer}>
+                                                        {dayArr[1].events.map((event) => {
+                                                            return (
+                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                                <td 
+                                                    className={`${classes.calendarElement} ${dayArr[2].date.getDate() == today.getDate() && dayArr[2].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                                                >
+                                                    <span className={classes.dateTitle}>{dayArr[2].date.getDate()}</span>
+                                                    <ul className={classes.eventContainer}>
+                                                        {dayArr[2].events.map((event) => {
+                                                            return (
+                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                                <td 
+                                                    className={`${classes.calendarElement} ${dayArr[3].date.getDate() == today.getDate() && dayArr[3].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                                                >
+                                                    <span className={classes.dateTitle}>{dayArr[3].date.getDate()}</span>
+                                                    <ul className={classes.eventContainer}>
+                                                        {dayArr[3].events.map((event) => {
+                                                            return (
+                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                                <td 
+                                                    className={`${classes.calendarElement} ${dayArr[4].date.getDate() == today.getDate() && dayArr[4].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                                                >
+                                                    <span className={classes.dateTitle}>{dayArr[4].date.getDate()}</span>
+                                                    <ul className={classes.eventContainer}>
+                                                        {dayArr[4].events.map((event) => {
+                                                            return (
+                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                                <td 
+                                                    className={`${classes.calendarElement} ${dayArr[5].date.getDate() == today.getDate() && dayArr[5].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                                                >
+                                                    <span className={classes.dateTitle}>{dayArr[5].date.getDate()}</span>
+                                                    <ul className={classes.eventContainer}>
+                                                        {dayArr[5].events.map((event) => {
+                                                            return (
+                                                                <li key={event.id} className={classes.eventItem}>{event.startTime} {event.summary || 'no summary'}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                                <td 
+                                                    className={`${classes.calendarElement} ${dayArr[6].date.getDate() == today.getDate() && dayArr[6].date.getMonth() == today.getMonth() ? classes.currentDate : ''}`}
+                                                >
+                                                    <span className={classes.dateTitle}>{dayArr[6].date.getDate()}</span>
+                                                    <ul className={classes.eventContainer}>
+                                                        {dayArr[6].events.map((event) => {
+                                                            return (
+                                                                <li key={event.id} className={classes.eventItem}>{event.summary || 'no summary'}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        )}
                     </Grid>
                 </Grid>
                 <Grid item container xs={4}>
@@ -94,7 +393,6 @@ class Calendar extends React.Component {
                             })}
                         </Fade>
                     </div>
-                    <iframe title='agenda' src="https://calendar.google.com/calendar/embed?height=144&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=dGF5Y21vb3JlMjAwOUBnbWFpbC5jb20&amp;src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;src=c3RlcGhhbmllbC5nZXJ0c2NoQGdtYWlsLmNvbQ&amp;src=dGF5Lm1vb3JlQGVtYnVyc2UuY29t&amp;color=%23F6BF26&amp;color=%234285F4&amp;color=%23795548&amp;color=%237986CB&amp;showTitle=0&amp;showNav=0&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA" style={{borderWidth:0}} width="453" height="144" frameBorder="0" scrolling="no"></iframe>
                 </Grid>
             </Grid>
         );
