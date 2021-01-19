@@ -102,7 +102,12 @@ class Calendar extends React.Component {
                     this.setState({photos});
                 }
             });
-        gapi.load('client', this.startCalendar);
+        const timer = setInterval(() => {
+            if (gapi) {
+                gapi.load('client', this.startCalendar);
+                clearInterval(timer);
+            }
+        }, 500)
     }
 
     startCalendar = () => {
