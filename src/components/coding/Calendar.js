@@ -103,24 +103,25 @@ class Calendar extends React.Component {
         var timer = setInterval(() => {
             var gapi = window.gapi;
             if (gapi) {
-                gapi.load('client', this.startCalendar);
+                this.gapi = gapi;
+                this.gapi.load('client', this.startCalendar);
                 clearInterval(timer);
             }
         }, 500)
     }
 
     startCalendar = () => {
-        gapi.client.init({
+        this.gapi.client.init({
             apiKey: envConfig.gaKey,
             clientId: envConfig.gaClientID,
             discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
             scope: "https://www.googleapis.com/auth/calendar.readonly"
         }).then(() => {
             // Listen for sign-in state changes.
-            gapi.auth2.getAuthInstance().isSignedIn.listen(this.loadCalendars);
+            this.gapi.auth2.getAuthInstance().isSignedIn.listen(this.loadCalendars);
     
             // Handle the initial sign-in state.
-            this.calendarSignIn(gapi.auth2.getAuthInstance().isSignedIn.get());
+            this.calendarSignIn(this.gapi.auth2.getAuthInstance().isSignedIn.get());
         }, function(error) {
             console.log(error);
         });
@@ -128,7 +129,7 @@ class Calendar extends React.Component {
 
     calendarSignIn = (signinStatus) => {
         if (!signinStatus) {
-            gapi.auth2.getAuthInstance().signIn();
+            this.gapi.auth2.getAuthInstance().signIn();
         } else {
             this.loadCalendars();
         }
@@ -138,13 +139,13 @@ class Calendar extends React.Component {
         const firstDate = this.firstDate(); //`${date.getFullYear()}-${date.getMonth() +1}-1T00:00:00Z`
         const lastDate = this.lastDate(); //`${date.getFullYear() + (date.getMonth() === 11 ? 1 : 0)}-${date.getMonth() === 11 ? 1 : date.getMonth() + 2}-1T00:00:00Z`;
 
-        gapi.client.calendar.calendarList.list()
+        this.gapi.client.calendar.calendarList.list()
             .then(this.parseApi)
             .then(data => {
                 const promiseArr = [];
                 
                 data.items.forEach(calendar => {
-                    promiseArr.push(gapi.client.calendar.events.list({
+                    promiseArr.push(this.gapi.client.calendar.events.list({
                         calendarId: calendar.id,
                         timeMin: `${firstDate}Z`,
                         timeMax: `${lastDate}Z`,
