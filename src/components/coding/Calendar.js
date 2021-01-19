@@ -14,8 +14,6 @@ import 'react-slideshow-image/dist/styles.css'
 import envConfig from '../../envConfig'
 import calendarConfig from './calendar/calendarConfig';
 
-const gapi = window.gapi;
-
 const styles = {
     root: {
         display: 'flex',
@@ -102,7 +100,8 @@ class Calendar extends React.Component {
                     this.setState({photos});
                 }
             });
-        const timer = setInterval(() => {
+        var timer = setInterval(() => {
+            var gapi = window.gapi;
             if (gapi) {
                 gapi.load('client', this.startCalendar);
                 clearInterval(timer);
