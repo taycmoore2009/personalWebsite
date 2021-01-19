@@ -6,9 +6,6 @@ import _ from 'lodash'
 import { 
     Grid,
     Chip,
-    Card,
-    CardContent,
-    CardMedia,
     Backdrop,
     CircularProgress,
     Dialog,
@@ -19,7 +16,6 @@ import {
     DialogTitle
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import { SportsRugbySharp } from '@material-ui/icons';
 
 const userNames = [
     {
