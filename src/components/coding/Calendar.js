@@ -123,6 +123,18 @@ class Calendar extends React.Component {
                 clearInterval(timer);
             }
         }, 500)
+        this.startRefresher();
+    }
+
+    startRefresher = () => {
+        var timer = setInterval(() => {
+            if (this.gapi && !this.gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                alert('You have been signed out?!');
+                clearInterval(timer);
+                return
+            }
+            this.loadCalendars();
+        }, 1800000)
     }
 
     startCalendar = () => {
