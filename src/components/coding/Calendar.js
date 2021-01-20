@@ -20,7 +20,8 @@ const styles = {
         flexWrap: 'wrap',
         listStyle: 'none',
         margin: 0,
-        background: '#000'
+        background: '#2d2e30',
+        fontFamily: 'sans-serif'
     },
     slideShow: {
         width: '423px',
@@ -39,7 +40,7 @@ const styles = {
         height: '600px',
         margin: '5px auto',
         borderCollapse: 'collapse',
-        color: '#FFF',
+        color: '#a7a8aa',
         fontSize: 12,
         tableLayout: 'fixed',
     },
@@ -47,26 +48,34 @@ const styles = {
         height: 115,
         width: 128,
         verticalAlign: 'top',
-        border: '1px solid #8671ce',
+        border: '1px solid #484a50',
+        background: '#202225',
         overflow: 'hidden',
     },
     dateTitle: {
-        color: '#8671ce',
+        color: '#a7a8aa',
         textAlign: 'right',
         width: '100%',
         display: 'inline-block'
     },
     currentDate: {
-        border: '2px solid #FFF',
+        border: '2px solid #89b4f7',
     },
     eventContainer: {
         width: '100%',
+        borderCollapse: 'collapse',
     },
     tayEvent: {
-        color: '#72a3ff'
+        background: '#2c9ed6',
+        borderRadius: '2px',
+        color: '#000',
+        border: '1px solid #000',
     },
     stephEvent: {
-        color: '#faf'
+        background: '#4aba86',
+        borderRaidus: '2px',
+        color: '#000',
+        border: '1px solid #000',
     },
     eventItem: {
         verticalAlign: 'top',
@@ -309,8 +318,10 @@ class Calendar extends React.Component {
                 {events.map(event => {
                     return (
                         <tr key={event.id} className={`${classes.eventItem} ${event.user.indexOf('tay') !== -1 ? classes.tayEvent : classes.stephEvent}`}>
-                            <td>{event.startTime}<br/>{event.endTime}</td>
-                            <td><div className={classes.eventDesc}>{event.summary || 'no summary'}</div></td>
+                            <td>
+                                {event.startTime}-{event.endTime}<br/>
+                                <div className={classes.eventDesc}>{event.summary || 'no summary'}</div>
+                            </td>
                         </tr>
                     )
                 })}
