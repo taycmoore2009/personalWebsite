@@ -87,7 +87,10 @@ const styles = {
         width: '100%',
     },
     infoContainer: {
-        padding: '0 26px'
+        padding: '0 6px'
+    },
+    weather: {
+        height: 238,
     },
     quotesContainer: {
         width: '660px',
@@ -137,7 +140,7 @@ class Calendar extends React.Component {
             }
         }, 500)
         this.startRefresher();
-
+        
         /** Load stock api */
         const tag = document.createElement('script');
         tag.async = true;
@@ -151,7 +154,7 @@ class Calendar extends React.Component {
                 new tradingView.widget(
                     {
                         "width": 325,
-                        "height": 244,
+                        "height": 240,
                         "symbol": "BITSTAMP:ETHUSD",
                         "interval": "30",
                         "timezone": "America/Los_Angeles",
@@ -162,7 +165,7 @@ class Calendar extends React.Component {
                         "enable_publishing": false,
                         "hide_top_toolbar": true,
                         "save_image": false,
-                        "container_id": "tradingview_304ba"
+                        "container_id": "tradingview_d3a85"
                       }
                 )
                 clearInterval(timer2);
@@ -446,7 +449,7 @@ class Calendar extends React.Component {
                 </Grid>
                 <Grid item container xs={12} justify='space-between' className={classes.infoContainer}>
                     <Grid item xs={3} container justify='flex-start'>
-                        <div id="cont_b4cb224432e2946a056553aaee7ab682"></div>
+                        <div id="cont_b4cb224432e2946a056553aaee7ab682" className={classes.weather}></div>
                     </Grid>
                     <Grid item container xs={6} justify='center'>
                         <div className={`slide-container ${classes.quotesContainer}`}>
@@ -810,7 +813,7 @@ class Calendar extends React.Component {
                     </Grid>
                     <Grid item xs={3}>
                         <div class="tradingview-widget-container">
-                            <div id="tradingview_304ba"></div>
+                            <div id="tradingview_d3a85"></div>
                         </div>
                     </Grid>
                 </Grid>
