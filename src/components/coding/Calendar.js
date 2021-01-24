@@ -24,21 +24,22 @@ const styles = {
         fontFamily: 'sans-serif'
     },
     slideShow: {
-        width: '423px',
-        height: '594px',
-        padding: '10px 10px 10px 20px'
+        width: 'calc(100% - 30px)',
+        padding: '10px 20px 10px 10px',
+        '& *': {
+            height: '100%'
+        },
     },
     flickrImg: {
-        height: 594,
         width: 453,
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center'
     },
     calendarContainer: {
-        width: '896px',
-        height: '600px',
-        margin: '5px auto',
+        width: '98%',
+        height: '500px',
+        margin: '5px auto 5px 10px',
         borderCollapse: 'collapse',
         color: '#a7a8aa',
         fontSize: 12,
@@ -87,16 +88,19 @@ const styles = {
         width: '100%',
     },
     infoContainer: {
-        padding: '0 6px'
+        padding: '0 10px'
     },
     weather: {
-        height: 238,
+        height: 190,
+        '& iframe': {
+            height: '190px !important'
+        }
     },
     quotesContainer: {
         width: '660px',
         margin: 'auto 0',
         color: '#a7a8aa',
-        height: '244px',
+        height: '268px',
         fontSize: '24px',
     },
 };
@@ -158,14 +162,14 @@ class Calendar extends React.Component {
                         "symbol": "BITSTAMP:ETHUSD",
                         "interval": "30",
                         "timezone": "America/Los_Angeles",
-                        "theme": "light",
+                        "theme": "dark",
                         "style": "2",
                         "locale": "en",
                         "toolbar_bg": "#f1f3f6",
                         "enable_publishing": false,
                         "hide_top_toolbar": true,
                         "save_image": false,
-                        "container_id": "tradingview_d3a85"
+                        "container_id": "tradingview_84d39"
                       }
                 )
                 clearInterval(timer2);
@@ -813,7 +817,7 @@ class Calendar extends React.Component {
                     </Grid>
                     <Grid item xs={3}>
                         <div class="tradingview-widget-container">
-                            <div id="tradingview_d3a85"></div>
+                            <div id="tradingview_84d39"></div>
                         </div>
                     </Grid>
                 </Grid>
