@@ -423,7 +423,7 @@ class Calendar extends React.Component {
 
     render = () => {
         const { classes } = this.props;
-        const {dateArr, events} = this.state;
+        const {dateArr, events, photos} = this.state;
 
         return (
             <Grid container justify="flex-start" className={classes.root}>
@@ -438,7 +438,7 @@ class Calendar extends React.Component {
                             indicators={false}
                             arrows={false}
                         >
-                            {this.state.photos.map(photo => {
+                            {photos.map(photo => {
                                 return (
                                 <div key={photo.title} className="each-fade">
                                     <div className="image-container">
