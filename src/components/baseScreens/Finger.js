@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 
 import { withStyles } from '@material-ui/styles';
 import { PropTypes } from 'prop-types';
@@ -11,7 +12,6 @@ const styles = () => ({
         width: '20%',
         height: '200px',
         cursor: 'pointer',
-        backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center'
     },
 });
@@ -45,9 +45,9 @@ class Finger extends React.Component {
 
     adjustImage = (event) => {
         const rect = event.target.getBoundingClientRect();
-        const x = event.clientX - rect.left > 0 ? event.clientX - rect.left : 0;
-        const y = event.clientY - rect.top > 0 ? event.clientY - rect.top : 0;
-        event.currentTarget.style.backgroundPosition = `-${x * 1.1}px -${y * 1.1}px`
+        const x = _.clamp((event.clientX - rect.left) * 2, 0, rect.width);
+        const y = _.clamp((event.clientY - rect.top) * 2, 0, rect.top);
+        event.currentTarget.style.backgroundPosition = `-${x}px -${y}px`
     }
 
     resetPhoto = (photoId, event) => {
