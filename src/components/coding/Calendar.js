@@ -338,10 +338,14 @@ class Calendar extends React.Component {
 
                         dayArr = dayArr.map((day) => {
                             const dayEvents = _.filter(events, (event) => {
-                                return event.start.dateTime.split('T')[0] === day.date.toISOString().split('T')[0];
+                                if (event.start.dateTime) {
+                                    return event.start.dateTime.split('T')[0] === day.date.toISOString().split('T')[0];
+                                } else if (event.start.date){
+                                    return event.start.date === day.date.toISOString().split('T')[0];
+                                }
                             }).map((dayEvent) => {
-                                let startTime = dayEvent.start.dateTime.split('T')[1];
-                                let endTime = dayEvent.end.dateTime.split('T')[1];
+                                let startTime = dayEvent.start.dateTime ? dayEvent.start.dateTime.split('T')[1] : '00:00:00';
+                                let endTime = dayEvent.end.dateTime ? dayEvent.end.dateTime.split('T')[1] : '23:59:99';
                                 const startHour = startTime.split(':')[0];
                                 const endHour = endTime.split(':')[0];
 
@@ -423,7 +427,7 @@ class Calendar extends React.Component {
 
     render = () => {
         const { classes } = this.props;
-        const {dateArr, events} = this.state;
+        const {dateArr, events, photos} = this.state;
 
         return (
             <Grid container justify="flex-start" className={classes.root}>
@@ -438,7 +442,7 @@ class Calendar extends React.Component {
                             indicators={false}
                             arrows={false}
                         >
-                            {this.state.photos.map(photo => {
+                            {photos.map(photo => {
                                 return (
                                 <div key={photo.title} className="each-fade">
                                     <div className="image-container">
