@@ -160,7 +160,7 @@ class Calendar extends React.Component {
                         "width": 325,
                         "height": 240,
                         "symbol": "BITSTAMP:DOGEUSD",
-                        "interval": "300",
+                        "interval": "D",
                         "timezone": "America/Los_Angeles",
                         "theme": "dark",
                         "style": "2",
