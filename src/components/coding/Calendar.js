@@ -97,7 +97,7 @@ const styles = {
         }
     },
     quotesContainer: {
-        width: '660px',
+        width: '610px',
         margin: 'auto 0',
         color: '#a7a8aa',
         height: '268px',
@@ -157,20 +157,22 @@ class Calendar extends React.Component {
             if (tradingView) {
                 new tradingView.widget(
                     {
-                        "width": 325,
-                        "height": 240,
-                        "symbol": "BITSTAMP:DOGEUSD",
-                        "interval": "D",
-                        "timezone": "America/Los_Angeles",
+                        "width": 473,
+                        "height": 192,
+                        "symbol": "BITFINEX:DOGEUSD",
+                        "interval": "15",
+                        "timezone": "Etc/UTC",
                         "theme": "dark",
                         "style": "2",
                         "locale": "en",
                         "toolbar_bg": "#f1f3f6",
                         "enable_publishing": false,
                         "hide_top_toolbar": true,
+                        "hide_legend": false,
                         "save_image": false,
+                        "details": true,
                         "container_id": "tradingview_84d39"
-                      }
+                    }
                 )
                 clearInterval(timer2);
             }
@@ -459,7 +461,7 @@ class Calendar extends React.Component {
                     <Grid item xs={3} container justify='flex-start'>
                         <div id="cont_b4cb224432e2946a056553aaee7ab682" className={classes.weather}></div>
                     </Grid>
-                    <Grid item container xs={6} justify='center'>
+                    <Grid item container xs={5} justify='center'>
                         <div className={`slide-container ${classes.quotesContainer}`}>
                             <Fade
                                 indicators={false}
@@ -819,10 +821,8 @@ class Calendar extends React.Component {
                             </Fade>
                         </div>
                     </Grid>
-                    <Grid item xs={3}>
-                        <div class="tradingview-widget-container">
-                            <div id="tradingview_84d39"></div>
-                        </div>
+                    <Grid item xs={4}>
+                        <div className={classes.tradingView} id="tradingview_84d39"></div>
                     </Grid>
                 </Grid>
             </Grid>
