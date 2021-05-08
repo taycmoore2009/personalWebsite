@@ -57,7 +57,8 @@ class Finger extends React.Component {
     }
 
     render = () => {
-        const { refer } = this.props;
+        const { classes } = this.props;
+        const { photos} = this.state;
 
         return (
             <Grid container>
