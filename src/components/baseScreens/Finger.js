@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/styles';
-import { PropTypes } from 'prop-types';
 import { Grid } from '@material-ui/core';
 
 const styles = () => ({
@@ -13,7 +12,7 @@ const styles = () => ({
 
 class Finger extends React.Component {
     render = () => {
-        const { classes, refer } = this.props;
+        const { refer } = this.props;
 
         return (
             <Grid container ref={refer}>
@@ -69,10 +68,6 @@ class Finger extends React.Component {
             </Grid>
         );
     }
-}
-
-Finger.propTypes = {
-    classes: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(Finger);
