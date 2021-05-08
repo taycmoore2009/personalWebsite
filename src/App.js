@@ -15,7 +15,7 @@ import Finger from './components/baseScreens/Finger';
 import DisplayWall from './components/coding/socialMediaWall/DisplayScreen';
 import CollarAndCombAdmin from './components/coding/socialMediaAdmin/CollarAndCombAdmin.js';
 import CollarAndComb from './components/coding/socialMediaWall/CollarAndComb';
-import Calendar from './components/coding/Calendar';
+import HomeScreen from './components/coding/HomeScreen';
 
 const styles = theme => ({
   '@media (min-width: 600px)': {
@@ -109,8 +109,8 @@ class App extends React.Component {
           <Route path='/collarandcomb'>
             <CollarAndComb/>
           </Route>
-          <Route path='/calendar'>
-            <Calendar/>
+          <Route path='/homescreen'>
+            <HomeScreen/>
           </Route>
           <Route>
             <CssBaseline />

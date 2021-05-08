@@ -2,7 +2,6 @@ import React from 'react';
 import _ from 'lodash';
 
 import { withStyles } from '@material-ui/styles';
-import { PropTypes } from 'prop-types';
 import { Grid } from '@material-ui/core';
 
 import Flickr from 'flickr-sdk'
@@ -58,8 +57,7 @@ class Finger extends React.Component {
     }
 
     render = () => {
-        const { classes } = this.props;
-        const { photos} = this.state;
+        const { refer } = this.props;
 
         return (
             <Grid container>
@@ -90,10 +88,6 @@ class Finger extends React.Component {
             </Grid>
         );
     }
-}
-
-Finger.propTypes = {
-    classes: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(Finger);
