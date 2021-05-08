@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     tabs: {
         borderRight: `1px solid ${theme.palette.divider}`,
     },
+    tabsWrapper: {
+        padding: '30px',
+    },
     tab: {
         height: '100vh',
     },
@@ -65,7 +68,7 @@ export default function VerticalTabs() {
 
   return (
     <Grid container className={classes.root}>
-        <Grid item xs={1}>
+        <Grid item xs={2}>
             <Tabs
                 orientation="vertical"
                 variant="scrollable"
@@ -74,15 +77,15 @@ export default function VerticalTabs() {
                 aria-label="Vertical tabs example"
                 className={classes.tabs}
             >
-                <Tab icon={<PhotoCamera/>} {...a11yProps(0)} />
-                <Tab icon={<Event/>} {...a11yProps(1)} />
-                <Tab icon={<TrendingUp/>} {...a11yProps(2)} />
-                <Tab icon={<Comment/>} {...a11yProps(3)} />
-                <Tab icon={<FormatQuote/>} {...a11yProps(4)} />
-                <Tab icon={<Cloud/>} {...a11yProps(5)} />
+                <Tab className={classes.tabsWrapper} icon={<PhotoCamera style={{ fontSize: 32 }}/>} {...a11yProps(0)} />
+                <Tab className={classes.tabsWrapper} icon={<Event style={{ fontSize: 32 }}/>} {...a11yProps(1)} />
+                <Tab className={classes.tabsWrapper} icon={<TrendingUp style={{ fontSize: 32 }}/>} {...a11yProps(2)} />
+                <Tab className={classes.tabsWrapper} icon={<Comment style={{ fontSize: 32 }}/>} {...a11yProps(3)} />
+                <Tab className={classes.tabsWrapper} icon={<FormatQuote style={{ fontSize: 32 }}/>} {...a11yProps(4)} />
+                <Tab className={classes.tabsWrapper} icon={<Cloud style={{ fontSize: 32 }}/>} {...a11yProps(5)} />
             </Tabs>
         </Grid>
-        <Grid item xs={11}>
+        <Grid item xs={10}>
             <TabPanel className={classes.tab} value={value} index={0}>
                 <PhotoReel/>
             </TabPanel>
