@@ -10,7 +10,7 @@
     "aws-sdk": "^2.828.0",
     "flickr-sdk": "^3.10.0",
     "googleapis": "^67.0.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "react": "^16.14.0",
     "react-color": "^2.19.3",
     "react-dom": "^16.14.0",
