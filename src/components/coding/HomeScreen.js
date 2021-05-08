@@ -77,11 +77,11 @@ export default function VerticalTabs() {
                 aria-label="Vertical tabs example"
                 className={classes.tabs}
             >
-                <Tab className={classes.tabsWrapper} icon={<PhotoCamera style={{ fontSize: 32 }}/>} {...a11yProps(0)} />
-                <Tab className={classes.tabsWrapper} icon={<Event style={{ fontSize: 32 }}/>} {...a11yProps(1)} />
-                <Tab className={classes.tabsWrapper} icon={<TrendingUp style={{ fontSize: 32 }}/>} {...a11yProps(2)} />
-                <Tab className={classes.tabsWrapper} icon={<FormatQuote style={{ fontSize: 32 }}/>} {...a11yProps(3)} />
-                <Tab className={classes.tabsWrapper} icon={<Cloud style={{ fontSize: 32 }}/>} {...a11yProps(4)} />
+                <Tab className={classes.tabsWrapper} icon={<PhotoCamera style={{ fontSize: 40 }}/>} {...a11yProps(0)} />
+                <Tab className={classes.tabsWrapper} icon={<Event style={{ fontSize: 40 }}/>} {...a11yProps(1)} />
+                <Tab className={classes.tabsWrapper} icon={<TrendingUp style={{ fontSize: 40 }}/>} {...a11yProps(2)} />
+                <Tab className={classes.tabsWrapper} icon={<FormatQuote style={{ fontSize: 40 }}/>} {...a11yProps(3)} />
+                <Tab className={classes.tabsWrapper} icon={<Cloud style={{ fontSize: 40 }}/>} {...a11yProps(4)} />
             </Tabs>
         </Grid>
         <Grid item xs={10}>
