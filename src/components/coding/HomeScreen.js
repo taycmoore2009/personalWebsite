@@ -80,9 +80,8 @@ export default function VerticalTabs() {
                 <Tab className={classes.tabsWrapper} icon={<PhotoCamera style={{ fontSize: 32 }}/>} {...a11yProps(0)} />
                 <Tab className={classes.tabsWrapper} icon={<Event style={{ fontSize: 32 }}/>} {...a11yProps(1)} />
                 <Tab className={classes.tabsWrapper} icon={<TrendingUp style={{ fontSize: 32 }}/>} {...a11yProps(2)} />
-                <Tab className={classes.tabsWrapper} icon={<Comment style={{ fontSize: 32 }}/>} {...a11yProps(3)} />
-                <Tab className={classes.tabsWrapper} icon={<FormatQuote style={{ fontSize: 32 }}/>} {...a11yProps(4)} />
-                <Tab className={classes.tabsWrapper} icon={<Cloud style={{ fontSize: 32 }}/>} {...a11yProps(5)} />
+                <Tab className={classes.tabsWrapper} icon={<FormatQuote style={{ fontSize: 32 }}/>} {...a11yProps(3)} />
+                <Tab className={classes.tabsWrapper} icon={<Cloud style={{ fontSize: 32 }}/>} {...a11yProps(4)} />
             </Tabs>
         </Grid>
         <Grid item xs={10}>
@@ -96,12 +95,9 @@ export default function VerticalTabs() {
                 <Stocks/>
             </TabPanel>
             <TabPanel className={classes.tab} value={value} index={3}>
-                <div>Item Four</div>
-            </TabPanel>
-            <TabPanel className={classes.tab} value={value} index={4}>
                 <Quotes/>
             </TabPanel>
-            <TabPanel className={classes.tab} value={value} index={5}>
+            <TabPanel className={classes.tab} value={value} index={4}>
                 <Weather/>
             </TabPanel>
         </Grid>

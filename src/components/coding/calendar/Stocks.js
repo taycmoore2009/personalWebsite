@@ -14,8 +14,8 @@ export default () => {
             new tradingView.widget(
                 {
                     "autosize": true,
-                    "symbol": "BITFINEX:DOGUSD",
-                    "interval": "D",
+                    "symbol": "BINANCE:DOGEUSD",
+                    "interval": "5",
                     "timezone": "Etc/UTC",
                     "theme": "dark",
                     "style": "2",
@@ -26,12 +26,13 @@ export default () => {
                     "allow_symbol_change": true,
                     "save_image": false,
                     "watchlist": [
+                      "BINANCE:DOGEUSD",
+                      "BINANCE:ETHUSD",
                       "BITSTAMP:BTCUSD",
                       "BITFINEX:LTCUSD",
                       "BINANCE:ETCUSD",
                       "BINANCE:ADAUSD",
                       "BINANCE:MKRUSD",
-                      "BINANCE:ETHUSD"
                     ],
                     "details": true,
                     "hotlist": true,
